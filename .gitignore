@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+venv/
+.venv/
+
+# Sistema Operativo y Editores
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# KiCad y respaldos temporales
+**/fp-info-cache*
+**/*.kicad_prl
+**/*-backups/
+**/*.bak
+
+# Archivos comprimidos redundantes
+*.zip
+
+# Respaldos con datos sensibles o volcados masivos
+/documentacion_fase1/Proyecto_Original/Proyecto_Original/BD_DBeaver/Base_Datos_Proyecto.sql
+/documentacion_fase1/Proyecto_Original/Proyecto_Original/BD_DBeaver/respaldo_proyecto.sql
+/documentacion_fase1/Proyecto_Original/Proyecto_Original/www/stem/ASSETS/DOCUMENTACION/dump-Base_Datos_Proyecto-202408131304.sql

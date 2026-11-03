@@ -1,0 +1,41 @@
+<!-- Esta página define la plantilla del pie de página institucional -->		
+<FOOTER>
+	<div class="Footer-css">
+		<div class="footer-grid">
+			<div class="footer-col">
+				<div class="footer-title">Institución</div>
+				<label>Corporación de Estudios Tecnológicos del Norte del Valle</label>
+				<label><strong>COTECNOVA</strong> &bull; Cartago, Valle del Cauca</label>
+				<label>Facultad de Ingeniería de Sistemas</label>
+			</div>
+			
+			<div class="footer-col">
+				<div class="footer-title">Investigación & Desarrollo</div>
+				<label>Semillero de Investigación <strong>STEM</strong></label>
+				<label>Monitoreo Microambiental de Invernaderos</label>
+				<label>Automatización e Inteligencia Artificial (TinyML)</label>
+			</div>
+			
+			<div class="footer-col">
+				<div class="footer-title">Equipo del Proyecto</div>
+				<?php if (isset($footer_custom_analisis) && $footer_custom_analisis): ?>
+					<label><strong>Directora:</strong> Sonia Elena Godoy Hortua</label>
+					<label><strong>Autores:</strong></label>
+					<label>Valentina Benítez</label>
+					<label>Carlos Andrés Loaiza</label>
+				<?php else: ?>
+					<label><strong>Director:</strong> Arvey Barahona Gómez</label>
+					<label><strong>Autores:</strong></label>
+					<label>Victor Hugo Hernández Peláez</label>
+					<label>Ana Sofía Castillo Moya</label>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<small>&copy; <?php echo date('Y'); ?> COTECNOVA &bull; Proyecto de Grado - Ingeniería de Sistemas</small>
+		</div>
+	</div>
+</FOOTER>
+</div>
+</body>
+</html>
