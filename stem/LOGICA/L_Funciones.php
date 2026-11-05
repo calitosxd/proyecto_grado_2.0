@@ -15,6 +15,21 @@
  */
 function Funcion_Gestionar_Sesion() {
     if (session_status() === PHP_SESSION_NONE) {
+        if (!headers_sent()) {
+            $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || 
+                       (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+                       (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+            session_set_cookie_params([
+                'lifetime' => 0,
+                'path' => '/',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+            header("X-Content-Type-Options: nosniff");
+            header("X-Frame-Options: SAMEORIGIN");
+            header("X-XSS-Protection: 1; mode=block");
+        }
         session_start();
     }
     
@@ -279,5 +294,184 @@ function Funcion_Contrasena_desencriptar($contrasena) {
     );
     $map = array_merge($map, $special_chars);
     return strtr($contrasena, $map);
+}
+
+/*============================================================================
+ * MODULO DE AUDITORIA Y TRAZABILIDAD (RBAC)
+ *============================================================================*/
+
+/**
+ * Registra una acción de usuario o administrador en la bitácora de auditoría.
+ */
+function Funcion_Registrar_Auditoria($accion, $modulo, $detalle = '') {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $usuario_nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : (isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Invitado');
+    $usuario_id = isset($_SESSION['id_usuario']) ? (int)$_SESSION['id_usuario'] : null;
+    $rol = isset($_SESSION['rol']) ? (int)$_SESSION['rol'] : 4;
+    $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
+
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return false;
+
+    try {
+        $sql = "INSERT INTO auditoria_actividad (usuario_id_fk, nombre_usuario_snapshot, rol_id_fk, accion, modulo, detalle, direccion_ip) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([$usuario_id, $usuario_nombre, $rol, $accion, $modulo, $detalle, $ip]);
+    } catch (PDOException $e) {
+        error_log("Error auditoria: " . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * Obtiene el registro de auditoría filtrado según permisos o usuario actual.
+ */
+function Funcion_Obtener_Auditoria($solo_usuario_actual = false, $limite = 50, $modulo_filtro = '') {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return array();
+
+    $usuario_nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : (isset($_SESSION['usuario']) ? $_SESSION['usuario'] : '');
+
+    try {
+        $where = array();
+        $params = array();
+
+        if ($solo_usuario_actual && !empty($usuario_nombre)) {
+            $where[] = "nombre_usuario_snapshot = ?";
+            $params[] = $usuario_nombre;
+        }
+
+        if (!empty($modulo_filtro)) {
+            $where[] = "modulo = ?";
+            $params[] = $modulo_filtro;
+        }
+
+        $sql = "SELECT id_auditoria_pk, usuario_id_fk, nombre_usuario_snapshot, rol_id_fk, accion, modulo, detalle, direccion_ip, fecha_auditoria 
+                FROM auditoria_actividad";
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY id_auditoria_pk DESC LIMIT " . (int)$limite;
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error consulta auditoria: " . $e->getMessage());
+        return array();
+    }
+}
+
+/*============================================================================
+ * BANCO DE IDEAS Y SUGERENCIAS DEL SEMILLERO STEM
+ *============================================================================*/
+
+/**
+ * Obtiene la lista de ideas y propuestas del semillero.
+ */
+function Funcion_Obtener_Ideas_Semillero($categoria = '') {
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return array();
+
+    try {
+        $sql = "SELECT id_idea_pk, autor_nombre, rol_autor, categoria, titulo, descripcion, estado, votos, fecha_registro 
+                FROM ideas_semillero";
+        $params = array();
+
+        if (!empty($categoria)) {
+            $sql .= " WHERE categoria = ?";
+            $params[] = $categoria;
+        }
+
+        $sql .= " ORDER BY votos DESC, id_idea_pk DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error ideas: " . $e->getMessage());
+        return array();
+    }
+}
+
+/**
+ * Registra una nueva idea o propuesta del equipo.
+ */
+function Funcion_Registrar_Idea($categoria, $titulo, $descripcion) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $autor_nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : (isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Miembro STEM');
+    $rol_id = isset($_SESSION['rol']) ? $_SESSION['rol'] : 3;
+
+    $rol_nombre = "Estudiante";
+    if ($rol_id === 0 || $rol_id === "0") $rol_nombre = "Super Administrador";
+    elseif ($rol_id === 1 || $rol_id === "1") $rol_nombre = "Administrador";
+    elseif ($rol_id === 2 || $rol_id === "2") $rol_nombre = "Docente Investigador";
+
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return false;
+
+    try {
+        $sql = "INSERT INTO ideas_semillero (autor_nombre, rol_autor, categoria, titulo, descripcion) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $res = $stmt->execute([$autor_nombre, $rol_nombre, $categoria, $titulo, $descripcion]);
+        if ($res) {
+            Funcion_Registrar_Auditoria('REGISTRO_IDEA', 'IDEAS_STEM', "Nueva propuesta: $titulo ($categoria)");
+        }
+        return $res;
+    } catch (PDOException $e) {
+        error_log("Error guardar idea: " . $e->getMessage());
+        return false;
+    }
+}
+
+/**
+ * Incrementa el voto de una idea.
+ */
+function Funcion_Votar_Idea($id_idea) {
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return false;
+
+    try {
+        $sql = "UPDATE ideas_semillero SET votos = votos + 1 WHERE id_idea_pk = ?";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([(int)$id_idea]);
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+/**
+ * Actualiza el estado de una idea (Solo para Admin e Investigador).
+ */
+function Funcion_Actualizar_Estado_Idea($id_idea, $nuevo_estado) {
+    $estados_validos = ['Propuesta', 'En Evaluacion', 'Aprobada', 'Implementada'];
+    if (!in_array($nuevo_estado, $estados_validos)) return false;
+
+    $pdo = Funcion_Conectar_Base_Datos();
+    if (!$pdo) return false;
+
+    try {
+        $sql = "UPDATE ideas_semillero SET estado = ? WHERE id_idea_pk = ?";
+        $stmt = $pdo->prepare($sql);
+        $res = $stmt->execute([$nuevo_estado, (int)$id_idea]);
+        if ($res) {
+            Funcion_Registrar_Auditoria('CAMBIO_ESTADO_IDEA', 'IDEAS_STEM', "Idea #$id_idea cambiada a: $nuevo_estado");
+        }
+        return $res;
+    } catch (PDOException $e) {
+        return false;
+    }
 }
 ?>

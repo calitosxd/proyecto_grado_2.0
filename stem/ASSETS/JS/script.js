@@ -124,12 +124,27 @@ const CotecnovaNotify = {
 
     toggleDropdown(forzar) {
         const dropdown = document.getElementById('notificationDropdown');
-        if (!dropdown) return;
+        const wrapper = dropdown ? dropdown.parentElement : null;
+        if (!dropdown || !wrapper) return;
 
         const abrir = (forzar !== undefined) ? forzar : !dropdown.classList.contains('show-notif-dropdown');
         if (abrir) {
             dropdown.classList.add('show-notif-dropdown');
             CotecnovaAudio.playBeep();
+
+            // Detectar posición relativa al viewport para que NUNCA se corte ni a izquierda ni a derecha
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const dropdownWidth = 360;
+
+            if (wrapperRect.right < dropdownWidth + 24) {
+                // El botón está en la mitad izquierda o la pantalla es angosta: abrir hacia la derecha
+                dropdown.style.left = '0';
+                dropdown.style.right = 'auto';
+            } else {
+                // El botón está en la mitad derecha con suficiente espacio: abrir hacia la izquierda
+                dropdown.style.left = 'auto';
+                dropdown.style.right = '0';
+            }
         } else {
             dropdown.classList.remove('show-notif-dropdown');
         }

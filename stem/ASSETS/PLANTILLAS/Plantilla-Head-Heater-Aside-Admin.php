@@ -253,6 +253,36 @@
                     </form>
                 </li>
 
+                <!-- Auditoria y Trazabilidad (Mi Actividad para todos, Global para Admin/Investigador) -->
+                <?php $isActive = ($current_page == 'I_Auditoria.php'); ?>
+                <li>
+                    <button class="btn nav-btn <?php echo $isActive ? 'active-nav' : ''; ?>" onclick="document.getElementById('formNavAuditoria').submit();">
+                        <span class="nav-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        </span>
+                        <span class="nav-text"><?php echo ($rol == 0 || $rol == 1 || $rol == 2) ? 'Auditoría & Trazabilidad' : 'Mi Actividad'; ?></span>
+                    </button>
+                    <form id="formNavAuditoria" method="POST" action="I_Auditoria.php">
+                        <input type="hidden" name="rol" value="<?php echo htmlspecialchars($rol, ENT_QUOTES, 'UTF-8'); ?>">
+                        <input type="hidden" name="permiso" value="<?php echo htmlspecialchars($permiso, ENT_QUOTES, 'UTF-8'); ?>">
+                    </form>
+                </li>
+
+                <!-- Banco de Ideas STEM -->
+                <?php $isActive = ($current_page == 'I_Ideas.php'); ?>
+                <li>
+                    <button class="btn nav-btn <?php echo $isActive ? 'active-nav' : ''; ?>" onclick="document.getElementById('formNavIdeas').submit();">
+                        <span class="nav-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+                        </span>
+                        <span class="nav-text">Banco de Ideas STEM</span>
+                    </button>
+                    <form id="formNavIdeas" method="POST" action="I_Ideas.php">
+                        <input type="hidden" name="rol" value="<?php echo htmlspecialchars($rol, ENT_QUOTES, 'UTF-8'); ?>">
+                        <input type="hidden" name="permiso" value="<?php echo htmlspecialchars($permiso, ENT_QUOTES, 'UTF-8'); ?>">
+                    </form>
+                </li>
+
                 <!-- Boton Cerrar Sesion -->
                 <li class="nav-logout-li">
                     <button class="btn btn-logout" onclick="location.href='index.php'">
