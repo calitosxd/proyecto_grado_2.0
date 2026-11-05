@@ -1,296 +1,283 @@
-<?php  
-/*....................................................................................................................*/
+<?php
+/*
+ * L_Funciones.php - Funciones Globales del Sistema de Monitoreo
+ * Semillero STEM - COTECNOVA
+ * Proyecto de Grado: Monitoreo Microambiental y Riego Inteligente
+ */
 
+/*============================================================================
+ * GESTION DE SESIONES Y SEGURIDAD
+ *============================================================================*/
 
+/**
+ * Valida o recupera la sesion actual del usuario.
+ * Sincroniza datos tanto de POST como de SESSION para persistencia.
+ */
+function Funcion_Gestionar_Sesion() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Si llegan datos por POST, actualizar sesion
+    if (isset($_POST['rol'])) {
+        $_SESSION['rol'] = $_POST['rol'];
+    }
+    if (isset($_POST['permiso'])) {
+        $_SESSION['permiso'] = $_POST['permiso'];
+    }
+    if (isset($_POST['usuario'])) {
+        $_SESSION['usuario'] = $_POST['usuario'];
+    }
 
+    $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : (isset($_POST['rol']) ? $_POST['rol'] : null);
+    $permiso = isset($_SESSION['permiso']) ? $_SESSION['permiso'] : (isset($_POST['permiso']) ? $_POST['permiso'] : null);
+
+    return array(
+        'rol' => $rol,
+        'permiso' => $permiso
+    );
+}
+
+/**
+ * Funcion que sanitiza la informacion ingresada por el usuario.
+ */
+function filtrado($datos) {
+    if ($datos === null) return '';
+    $datos = trim($datos);
+    $datos = stripslashes($datos);
+    $datos = htmlspecialchars($datos, ENT_QUOTES, 'UTF-8');
+    return $datos;
+}
+
+/*============================================================================
+ * CONEXIONES A BASE DE DATOS
+ *============================================================================*/
+
+/**
+ * Conexion MySQLi para consultas rapidas y compatibilidad ESP32 / IA.
+ */
+function Funcion_Conectar_Base_Datos_ESP32() {
+    $conexion = mysqli_connect("127.0.0.1", "victorhugohp", "@1982vhHP2026@", "Base_Datos_Proyecto");
+
+    if (!$conexion) {
+        error_log("Error en conexion MySQLi: " . mysqli_connect_error());
+        die("Error en la conexion a la base de datos.");
+    }
+
+    mysqli_set_charset($conexion, "utf8");
+    return $conexion;
+}
+
+/**
+ * Conexion PDO para operaciones seguras con transacciones y sentencias preparadas.
+ */
+function Funcion_Conectar_Base_Datos() {
+    if (!defined('BD_USER')) define('BD_USER', 'victorhugohp');
+    if (!defined('BD_CLAVE')) define('BD_CLAVE', '@1982vhHP2026@');
+
+    try {
+        $conexion = new PDO('mysql:host=127.0.0.1;dbname=Base_Datos_Proyecto;charset=utf8', BD_USER, BD_CLAVE);
+        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conexion;
+    } catch (PDOException $e) {
+        error_log("Error PDO: " . $e->getMessage());
+        return null;
+    }
+}
+
+/*============================================================================
+ * CONSULTAS DE TINYML / REGISTRO IA
+ *============================================================================*/
+
+/**
+ * Lista las inferencias ejecutadas por el modelo TinyML en un rango de fechas.
+ * Utiliza sentencias preparadas para prevenir inyecciones SQL.
+ */
 function Funcion_Listar_IA_Rango_HTML($fecha_inicio, $fecha_fin) {
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_inicio) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_fin)) {
+        return array();
+    }
+
     $conn = Funcion_Conectar_Base_Datos_ESP32();
-    // Se concatena la fecha de fin con las últimas horas del día para cubrir el rango completo
-    $sql = "SELECT ia_id_pk, fecha_ia, registro_ia, valvula_ia FROM ia WHERE fecha_ia BETWEEN '$fecha_inicio 00:00:00' AND '$fecha_fin 23:59:59' ORDER BY ia_id_pk DESC";
-    $result = $conn->query($sql);
+    $sql = "SELECT ia_id_pk, fecha_ia, registro_ia, valvula_ia FROM ia WHERE fecha_ia BETWEEN ? AND ? ORDER BY ia_id_pk DESC";
+    $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        $conn->close();
+        return array();
+    }
+
+    $desde = $fecha_inicio . " 00:00:00";
+    $hasta = $fecha_fin . " 23:59:59";
+    $stmt->bind_param("ss", $desde, $hasta);
+    $stmt->execute();
+    $result = $stmt->get_result();
     
     $lista = array();
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_row()) {
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_row()) {
             $lista[] = $row;
         }
     }
+    $stmt->close();
     $conn->close();
     return $lista;
 }
 
 function Funcion_Listar_IA_Rango_CSV($fecha_inicio, $fecha_fin) {
-    // Puede reutilizar la misma lógica de ordenación o modificar los campos según desees exportar
     return Funcion_Listar_IA_Rango_HTML($fecha_inicio, $fecha_fin);
 }
 
+/*============================================================================
+ * GESTION DE USUARIOS
+ *============================================================================*/
 
-
-
-
-
-
-
-/*#################################### lIMPIEZA DE DATOS #############################################################*/
-
-/*Funcion que valida la informacion ingresada por el usuario.*/
-function filtrado($datos){
-    $datos = trim($datos); // Elimina espacios antes y después de los datos
-    $datos = stripslashes($datos); // Elimina backslashes '\''
-    $datos = htmlspecialchars($datos); // Traduce caracteres especiales en entidades HTML
-    return $datos;
-}
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-
-/*####################################### BASE DE DATOS ##############################################################*/
-
-/*Función que realiza la conexión con la Base de Datos, en este caso, para acceder a la tabla sensores.*/
-function Funcion_Conectar_Base_Datos_ESP32(){
-    $conexion = mysqli_connect("127.0.0.1", "victorhugohp", "@1982vhHP2026@", "Base_Datos_Proyecto");
-    //$conexion = mysqli_connect("127.0.0.1", "victorhugohp", "@1982vhHP2024@", "Base_Datos_Proyecto");
-
-    if(!$conexion){
-        die("Eror en la conexion: " . mysqli_connect_error());
-    }
-
-    mysqli_set_charset($conexion, "utf8");
-
-    return $conexion;
-}
-
-/*Función que realiza la conexión con la Base de Datos, en este caso, para acceder a la tabla usuarios.*/
-/*Sea Localhost PC O Externa*/
-function Funcion_Conectar_Base_Datos()
-{
-    /*Conexión con Base de Datos local*/
-        //define('BD_USER', 'victorhugohp');/*Nombre del usuario*/
-        define('BD_USER', 'victorhugohp');/*Nombre del usuario*/
-        define('BD_CLAVE', '@1982vhHP2026@');/*clave del usuario*/
-    /*Conexión con Base de Datos WEB*/
-        //define('BD_USER','POt0YvKiWV');
-        //define('BD_CLAVE','uGWIDtSUqV');
-
-    /*Conexion a la BD*/
-
-    try 
-    {
-        /*Conexión con Bases de Datos Local*/
-            //return $conexion = new PDO('mysql:host=127.0.0.1; dbname=Base_Datos_Proyecto', BD_USER, BD_CLAVE);
-            return $conexion = new PDO('mysql:host=127.0.0.1; dbname=Base_Datos_Proyecto', BD_USER, BD_CLAVE);
-            //return $conexion = new PDO('mysql:host=1localhost; dbname=Base_Datos_Proyecto', BD_USER, BD_CLAVE);
-        /*Conexión Bases de Datos WEB*/
-            //return $conexion = new PDO('mysql:host=remotemysql.com;port=3306;dbname=POt0YvKiWV', BD_USER, BD_CLAVE);
-        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-    } 
-    catch (PDOException $e)
-    {
-        echo "¡Error en la conexion: " . $e->getMessage() . "<br/>";
-        
-    }
-}
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-/*######################################## USUARIOS ##################################################################*/
-
-/*Función que realiza consulta en la Base de Datos la tabla 'USUARIOS'. (Enlista solo una persona)*/
-function Funcion_Buscar_Usuario($id_usuario)
-{
-    /*Utiliza la función 'Conectar_Base_Datos', para realizar la coneción con la Base de Datos.*/
-    //$id = $id;
+/**
+ * Busca un usuario por su documento de identidad utilizando sentencias preparadas.
+ */
+function Funcion_Buscar_Usuario($id_usuario) {
     $conexion = Funcion_Conectar_Base_Datos();
-    /*global $conexion;   //utiliza la conexion*/
-    try 
-    {       
-        $sql = ("SELECT * FROM usuario WHERE id_pk_usuario =".$id_usuario);   
-        $query = $conexion->prepare($sql);    
+    if (!$conexion) return array();
+
+    try {
+        $sql = "SELECT * FROM usuario WHERE id_pk_usuario = :id_usuario";
+        $query = $conexion->prepare($sql);
+        $query->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
         $query->execute();
-        return $query->fetchAll();      
-    } 
-    catch (PDOException $e) 
-    {
-     echo "¡Error en la consulta: " . $e->getMessage() . "<br/>";
- }
+        return $query->fetchAll();
+    } catch (PDOException $e) {
+        error_log("Error en consulta de usuario: " . $e->getMessage());
+        return array();
+    }
 }
 
-/*Función que realiza una eliminación en la Base de Datos la tabla 'USUARIOS'. (ELIMINA A UNA SOLA PERSONA)*/
-function Funcion_Eliminar_Usuario($id_pk_usuario, $rol, $permiso)
-{
-
-    /*Utiliza la función 'Conectar_Base_Datos', para realizar la coneción con la Base de Datos.*/
+/**
+ * Inactiva a un usuario cambiando su estado a 0 (borrado logico).
+ */
+function Funcion_Eliminar_Usuario($id_pk_usuario, $rol, $permiso) {
     $conexion = Funcion_Conectar_Base_Datos();
-    /*global $conexion;   //utiliza la conexion*/
-    try 
-    {       
-        //$sql = ("DELETE FROM persona WHERE id_pk_persona =:id_pk_persona");
-        $sql = "UPDATE usuario SET estado_usuario = '0', permiso_usuario_1 = '0' WHERE id_pk_usuario = :id_pk_usuario";  
-        //$sql = ("DELETE FROM usuario WHERE id_pk_usuario = :id_pk_usuario");   
-        $query = $conexion->prepare($sql); 
-        $query->bindparam(':id_pk_usuario', $id_pk_usuario);  
+    if (!$conexion) return;
+
+    try {
+        $sql = "UPDATE usuario SET estado_usuario = '0', permiso_usuario_1 = '0' WHERE id_pk_usuario = :id_pk_usuario";
+        $query = $conexion->prepare($sql);
+        $query->bindParam(':id_pk_usuario', $id_pk_usuario, PDO::PARAM_INT);
         
         if ($query->execute()) {
-            echo "<center><h2 style ='color: blue;'>USUARIO ELIMINADO EXITOSAMENTE</h2></center></br>";
-            
-            // Crear un formulario oculto que enviará los datos "rol" y "permisos" del usuario actual
-            // cuando se oprima el botón "Aceptar"
+            echo "<div style='text-align:center; padding: 20px;'><h2 style='color: #00602F;'>Usuario desactivado correctamente</h2></div>";
             echo "<form id='redirectForm' method='POST' action='../I_Bienvenida.php'>
-            <input type='hidden' name='rol' value='$rol'>
-            <input type='hidden' name='permiso' value='$permiso'>
-            <center><button class='btn' type='submit'><h3>Aceptar</h3></button></center>
-            </form>";
-        
-            } else {
-                // Manejo del error
-                echo "<center><h2 style ='color: red;'>Error al realizar el registro.</h2></center></br>";
-            }
-
-
-
-    } 
-    catch (PDOException $e) 
-    {
-     echo "¡Error en el Borrado: " . $e->getMessage() . "<br/>";
- }
+                    <input type='hidden' name='rol' value='" . htmlspecialchars($rol, ENT_QUOTES, 'UTF-8') . "'>
+                    <input type='hidden' name='permiso' value='" . htmlspecialchars($permiso, ENT_QUOTES, 'UTF-8') . "'>
+                    <div style='text-align:center;'><button class='btn' type='submit'>Aceptar</button></div>
+                  </form>";
+        } else {
+            echo "<div style='text-align:center; padding: 20px;'><h2 style='color: #EF4444;'>No fue posible desactivar el usuario.</h2></div>";
+        }
+    } catch (PDOException $e) {
+        error_log("Error en desactivacion de usuario: " . $e->getMessage());
+        echo "<div style='text-align:center; color:#EF4444;'>Error procesando la solicitud.</div>";
+    }
 }
-/*--------------------------------------------------------------------------------------------------------------------*/
 
-/*########################################## SENSORES ################################################################*/
+/*============================================================================
+ * LECTURAS DE SENSORES IOT
+ *============================================================================*/
 
-/* Funcion que lista los registros de los sensores en un rango de fechas para luego ser exportados a un formato *.csv */
-function Funcion_Listar_Sensados_Rango_CSV($fecha_inicio, $fecha_fin)
-{
-    // Validar y sanitizar las fechas(formato YYYY-MM-DD)
+/**
+ * Lista lecturas de sensores en un rango de fechas para exportacion CSV.
+ */
+function Funcion_Listar_Sensados_Rango_CSV($fecha_inicio, $fecha_fin) {
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_inicio) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_fin)) {
-        throw new InvalidArgumentException('Formato de fecha inválido.');
+        throw new InvalidArgumentException('Formato de fecha invalido.');
     }
 
-    // Utiliza la función 'Conectar_Base_Datos' para realizar la conexión con la Base de Datos
     $conexion = Funcion_Conectar_Base_Datos();
+    if (!$conexion) return array();
 
-    try 
-    {   
-        // Consulta para seleccionar los datos dentro del rango de fechas especificado
-        $sql = "SELECT * FROM sensores WHERE DATE(fecha_sensores) BETWEEN :fecha_inicio AND :fecha_fin";
-        
-        // Prepara y ejecuta la consulta
+    try {
+        $sql = "SELECT * FROM sensores WHERE DATE(fecha_sensores) BETWEEN :fecha_inicio AND :fecha_fin ORDER BY fecha_sensores DESC";
         $query = $conexion->prepare($sql);
         $query->bindParam(':fecha_inicio', $fecha_inicio);
         $query->bindParam(':fecha_fin', $fecha_fin);
         $query->execute();
-        
-        // Devuelve todos los resultados
-        return $query->fetchAll(PDO::FETCH_ASSOC);  // Asegúrate de que los resultados se devuelvan como un arreglo asociativo
-    } 
-    catch (PDOException $e) 
-    {
-        // Loguear el error en un archivo (si es necesario) y mostrar un mensaje amigable
-        error_log("Error en la consulta: " . $e->getMessage());
-        echo "Ocurrió un error al procesar la consulta. Por favor, intente nuevamente más tarde.";
-        return [];  // Devolver un arreglo vacío en caso de error
-    }
-    finally
-    {
-        // Cerrar la conexión (opcional, PDO lo maneja automáticamente, pero se puede hacer explícitamente)
-        $conexion = null;
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error en exportacion de sensores: " . $e->getMessage());
+        return array();
     }
 }
 
-/* Funcion que lista los registros de los sensores en un rango de fechas para luego ser mostrados en pantalla */
-function Funcion_Listar_Sensados_Rango_HTML($fecha_inicio, $fecha_fin)
-{
-    // Utiliza la función 'Conectar_Base_Datos' para realizar la conexión con la Base de Datos
+/**
+ * Lista lecturas de sensores para renderizado en tabla HTML.
+ */
+function Funcion_Listar_Sensados_Rango_HTML($fecha_inicio, $fecha_fin) {
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_inicio) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_fin)) {
+        return array();
+    }
+
     $conexion = Funcion_Conectar_Base_Datos();
-    
-    try 
-    {   
-        // Consulta para seleccionar los datos dentro del rango de fechas especificado
-        $sql = "SELECT * FROM sensores WHERE DATE(fecha_sensores) BETWEEN :fecha_inicio AND :fecha_fin";
-        
-        // Prepara y ejecuta la consulta
+    if (!$conexion) return array();
+
+    try {
+        $sql = "SELECT * FROM sensores WHERE DATE(fecha_sensores) BETWEEN :fecha_inicio AND :fecha_fin ORDER BY fecha_sensores DESC";
         $query = $conexion->prepare($sql);
         $query->bindParam(':fecha_inicio', $fecha_inicio);
         $query->bindParam(':fecha_fin', $fecha_fin);
         $query->execute();
-        
-        // Devuelve todos los resultados
-        return $query->fetchAll();	    
-    } 
-    catch (PDOException $e) 
-    {
-        echo "¡Error en la consulta: " . $e->getMessage() . "<br/>";
+        return $query->fetchAll();
+    } catch (PDOException $e) {
+        error_log("Error en consulta HTML de sensores: " . $e->getMessage());
+        return array();
     }
 }
-/*--------------------------------------------------------------------------------------------------------------------*/
 
-/*############################################### ENCRIPTACION #######################################################*/
+/*============================================================================
+ * SEGURIDAD Y ENCRIPTACION DE CONTRASEÑAS
+ *============================================================================*/
 
-// Función para encriptar la contraseña
+/**
+ * Cifrado reversible de dos capas para compatibilidad con credenciales almacenadas.
+ */
 function Funcion_Contrasena_encriptar($contrasena) {
-    // Primera capa de encriptación
-    $map = [];
-    
-    // Rango de caracteres ASCII imprimibles (32-126)
+    $map = array();
     for ($i = 32; $i <= 126; $i++) {
         $map[chr($i)] = chr(($i + 47) % 94 + 32);
     }
-
-    // Caracteres especiales latinos y vocales con acento
-    $special_chars = [
+    $special_chars = array(
         'á' => 'ð', 'é' => 'ñ', 'í' => 'ò', 'ó' => 'ó', 'ú' => 'ô',
         'Á' => 'õ', 'É' => 'ö', 'Í' => '÷', 'Ó' => 'ø', 'Ú' => 'ù',
         'ñ' => 'ú', 'Ñ' => 'û', 'ü' => 'ü', 'Ü' => 'ý', '¿' => 'þ',
         '¡' => 'ÿ'
-    ];
-
+    );
     $map = array_merge($map, $special_chars);
-
-    // Aplicar el mapeo a la contraseña
     $word_crypted = strtr($contrasena, $map);
 
-    // Segunda capa de encriptación
     $clave = 'Una cadena, muy, muy larga para mejorar la encriptacion';
     $method = 'aes-256-cbc';
     $iv = base64_decode("C9fBxl1EWtYTL1/M8jfstw==");
 
-    $encriptar = function ($valor) use ($method, $clave, $iv) {
-        return openssl_encrypt($valor, $method, $clave, 0, $iv);
-    };
-    
-    return $encriptar($word_crypted);
+    return openssl_encrypt($word_crypted, $method, $clave, 0, $iv);
 }
 
-// Función para desencriptar la contraseña
 function Funcion_Contrasena_desencriptar($contrasena) {
-    // Segunda capa de desencriptación
     $clave = 'Una cadena, muy, muy larga para mejorar la encriptacion';
     $method = 'aes-256-cbc';
     $iv = base64_decode("C9fBxl1EWtYTL1/M8jfstw==");
 
-    $desencriptar = function ($valor) use ($method, $clave, $iv) {
-        return openssl_decrypt($valor, $method, $clave, 0, $iv);
-    };
+    $contrasena = openssl_decrypt($contrasena, $method, $clave, 0, $iv);
+    if ($contrasena === false) return '';
 
-    $contrasena = $desencriptar($contrasena);
-
-    // Primera capa de desencriptación
-    $map = [];
-    
-    // Rango de caracteres ASCII imprimibles (32-126)
+    $map = array();
     for ($i = 32; $i <= 126; $i++) {
         $map[chr(($i + 47) % 94 + 32)] = chr($i);
     }
-
-    // Caracteres especiales latinos y vocales con acento
-    $special_chars = [
+    $special_chars = array(
         'ð' => 'á', 'ñ' => 'é', 'ò' => 'í', 'ó' => 'ó', 'ô' => 'ú',
         'õ' => 'Á', 'ö' => 'É', '÷' => 'Í', 'ø' => 'Ó', 'ù' => 'Ú',
         'ú' => 'ñ', 'û' => 'Ñ', 'ü' => 'ü', 'ý' => 'Ü', 'þ' => '¿',
         'ÿ' => '¡'
-    ];
-
+    );
     $map = array_merge($map, $special_chars);
-
     return strtr($contrasena, $map);
 }
-/*....................................................................................................................*/
 ?>

@@ -297,7 +297,7 @@ function Funcion_Obtener_Ultimo_Estado_Invernadero() {
         'valvulas_texto'      => 'Todas las electroválvulas cerradas (En reposo)',
         'registro_ia'         => 'Niveles hídricos restaurados satisfactoriamente tras ciclo de micro-aspersión. Sistema en reposo.',
         'semaforo_color'      => 'verde',
-        'semaforo_badge'      => '🟢 ESTADO GENERAL: ÓPTIMO',
+        'semaforo_badge'      => 'ESTADO GENERAL: OPTIMO',
         'semaforo_sub'        => 'Microclima y humedad de suelo en equilibrio según parámetros FAO.',
         'alerta_tipo'         => 'success'
     ];
@@ -340,15 +340,18 @@ function Funcion_Obtener_Ultimo_Estado_Invernadero() {
     $estado['valvulas_activas'] = [1 => $v1_activa, 2 => $v2_activa, 3 => $v3_activa];
 
     if ($v_cod == 0) {
-        $estado['valvulas_texto'] = 'Válvulas cerradas (En reposo / No requiere riego)';
+        $estado['valvulas_texto'] = 'Válvulas Cerradas';
+        $estado['valvulas_estado_sub'] = 'En reposo / No requiere riego';
     } elseif ($v_cod == 7) {
-        $estado['valvulas_texto'] = 'Riego total activo en los 3 surcos (V1, V2 y V3)';
+        $estado['valvulas_texto'] = 'Riego Total Activo';
+        $estado['valvulas_estado_sub'] = 'Electroválvulas V1, V2 y V3 abiertas (3 surcos)';
     } else {
         $activas = [];
         if ($v1_activa) $activas[] = 'Surco 1 (100%)';
         if ($v2_activa) $activas[] = 'Surco 2 (75%)';
         if ($v3_activa) $activas[] = 'Surco 3 (50%)';
-        $estado['valvulas_texto'] = 'Riego activo en ' . implode(' y ', $activas);
+        $estado['valvulas_texto'] = 'Riego Activo';
+        $estado['valvulas_estado_sub'] = 'Electroválvulas abiertas en ' . implode(' y ', $activas);
     }
 
     // 3. Evaluación del Semáforo Agronómico (Literatura FAO N° 56 y Fase 1)
@@ -361,7 +364,7 @@ function Funcion_Obtener_Ultimo_Estado_Invernadero() {
     if ($tem >= 35.0 || $s50 < 30.0 || $s75 < 30.0 || $v_cod == 7) {
         // Alerta Crítica (Rojo)
         $estado['semaforo_color'] = 'rojo';
-        $estado['semaforo_badge'] = '🔴 ALERTA: Estrés Hídrico / Térmico Severo';
+        $estado['semaforo_badge'] = 'ALERTA: Estrés Hídrico / Térmico Severo';
         $estado['semaforo_sub']   = ($tem >= 35.0) 
             ? 'Temperatura interior crítica (>35°C). Activación de microaspersión o ventilación.' 
             : 'Humedad de suelo cerca o debajo del Punto de Marchitez Permanente (PMP: 30%).';
@@ -370,20 +373,20 @@ function Funcion_Obtener_Ultimo_Estado_Invernadero() {
         // Precaución (Amarillo)
         $estado['semaforo_color'] = 'amarillo';
         if ($tem > 32.0) {
-            $estado['semaforo_badge'] = '🟡 PRECAUCIÓN: Estrés Térmico en la Tarde (' . round($tem, 1) . '°C)';
+            $estado['semaforo_badge'] = 'PRECAUCIÓN: Estrés Térmico en la Tarde (' . round($tem, 1) . '°C)';
             $estado['semaforo_sub']   = 'Temperatura superior a 32°C. Riesgo de cierre estomático y fotorrespiración en hojas.';
         } elseif ($v_cod > 0) {
-            $estado['semaforo_badge'] = '🟡 PRECAUCIÓN: Ciclo de Riego en Curso (Código ' . $v_cod . ')';
+            $estado['semaforo_badge'] = 'PRECAUCIÓN: Ciclo de Riego en Curso (Código ' . $v_cod . ')';
             $estado['semaforo_sub']   = 'El sistema TinyML activó el pulso de electroválvula para restaurar la humedad.';
         } else {
-            $estado['semaforo_badge'] = '🟡 PRECAUCIÓN: Déficit Hídrico Detectado en Sustrato';
+            $estado['semaforo_badge'] = 'PRECAUCIÓN: Déficit Hídrico Detectado en Sustrato';
             $estado['semaforo_sub']   = 'Uno o más surcos han alcanzado el umbral de activación de riego programado.';
         }
         $estado['alerta_tipo'] = 'warning';
     } else {
         // Óptimo (Verde)
         $estado['semaforo_color'] = 'verde';
-        $estado['semaforo_badge'] = '🟢 ESTADO GENERAL: ÓPTIMO';
+        $estado['semaforo_badge'] = 'ESTADO GENERAL: ÓPTIMO';
         $estado['semaforo_sub']   = 'Microclima y humedad del sustrato en equilibrio agronómico según criterios FAO.';
         $estado['alerta_tipo']    = 'success';
     }

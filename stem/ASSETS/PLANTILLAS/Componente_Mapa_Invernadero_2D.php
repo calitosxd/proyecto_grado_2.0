@@ -344,7 +344,8 @@ if ($mapa_s50 >= 40.0) {
     <div class="mapa-header">
         <div>
             <div class="mapa-title">
-                <span>🗺️</span> Mapa Esquemático 2D del Invernadero (COTECNOVA)
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#00602F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                Mapa Esquemático 2D del Invernadero (COTECNOVA)
             </div>
             <div style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">
                 Distribución física del cultivo experimental: 3 surcos, 81 bolsas de almácigo y módulo de decisión TinyML (Tesis Fig. 2).
@@ -363,39 +364,39 @@ if ($mapa_s50 >= 40.0) {
         <div class="roof-structure">
             <div>
                 <strong>Invernadero Tecnificado — Módulo Experimental STEM</strong>
-                <span style="font-size: 0.74rem; color: #64748B;">(Cartago, Valle del Cauca • 917 m.s.n.m.)</span>
+                <span style="font-size: 0.74rem; color: #64748B;">(Cartago, Valle del Cauca &bull; 917 m.s.n.m.)</span>
             </div>
             <div style="display: flex; gap: 8px; align-items: center;">
                 <span class="roof-badge">Cubierta Plástica Térmica</span>
-                <span style="font-size: 0.75rem; font-weight: 700; color: #00602F;">Norte ⬆️</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: #00602F;">Norte &uarr;</span>
             </div>
         </div>
 
         <!-- Sensórica Ambiental Interior & Caja de Control TinyML -->
         <div class="central-station-bar">
             <div class="central-item">
-                <span style="font-size: 1.3rem;">🧠</span>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#6B21A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line></svg>
                 <div>
                     <div>Controlador ESP32 + TinyML</div>
                     <small>Inferencia Edge en tiempo real</small>
                 </div>
             </div>
             <div class="central-item">
-                <span style="font-size: 1.3rem;">🌡️</span>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
                 <div>
                     <div>DHT20 Interior: <?php echo number_format($mapa_tem_int, 1); ?>°C | <?php echo number_format($mapa_hum_int, 1); ?>% HR</div>
                     <small>Microclima protegido</small>
                 </div>
             </div>
             <div class="central-item">
-                <span style="font-size: 1.3rem;">☀️</span>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 <div>
                     <div>Referencia Exterior: <?php echo number_format($mapa_tem_ext, 1); ?>°C | <?php echo number_format($mapa_hum_ext, 1); ?>% HR</div>
                     <small>Cielo abierto</small>
                 </div>
             </div>
             <div class="central-item">
-                <span style="font-size: 1.3rem;">🚰</span>
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
                 <div>
                     <div>Tubería de Riego Matriz</div>
                     <small>3 Electroválvulas de 12V DC</small>
@@ -409,7 +410,7 @@ if ($mapa_s50 >= 40.0) {
             <div class="surco-row surco-<?php echo $color_s1; ?>" onclick="mostrarDetalleSurco(1, 'Surco 1: Tratamiento 100% (Testigo Pleno)', '<?php echo number_format($mapa_s100, 1); ?>%', '<?php echo $texto_s1; ?>', 'Electroválvula 1 (V1)', 'Bolsas #01 a #27', '<?php echo $mapa_v1 ? 'ABIERTA' : 'CERRADA'; ?>', 'Capacidad de Campo (CC): 60% - 85%')">
                 <div class="surco-info-header">
                     <div class="surco-name">
-                        <span>🌱</span> Surco 1: Tratamiento al 100% (Testigo Convencional)
+                        <span style="font-weight:700; color:#00602F; margin-right:4px;">[S1]</span> Surco 1: Tratamiento al 100% (Testigo Convencional)
                     </div>
                     <div class="surco-tags">
                         <span class="surco-tag">Humedad: <?php echo number_format($mapa_s100, 1); ?>%</span>
@@ -424,7 +425,7 @@ if ($mapa_s50 >= 40.0) {
                 <div class="bolsas-track">
                     <?php for ($i = 1; $i <= 27; $i++): ?>
                         <div class="bolsa-item bolsa-<?php echo $color_s1; ?>" title="Bolsa #<?php echo sprintf('%02d', $i); ?> (Surco 1 - 100%) - Humedad: <?php echo number_format($mapa_s100, 1); ?>%">
-                            <span class="bolsa-sprout">🌱</span>
+                            <span class="bolsa-sprout" style="font-size:0.68rem; font-weight:800; color:#15803D;">&bull;</span>
                         </div>
                     <?php endfor; ?>
                 </div>
@@ -434,7 +435,7 @@ if ($mapa_s50 >= 40.0) {
             <div class="surco-row surco-<?php echo $color_s2; ?>" onclick="mostrarDetalleSurco(2, 'Surco 2: Tratamiento 75% (Déficit Moderado)', '<?php echo number_format($mapa_s75, 1); ?>%', '<?php echo $texto_s2; ?>', 'Electroválvula 2 (V2)', 'Bolsas #28 a #54', '<?php echo $mapa_v2 ? 'ABIERTA' : 'CERRADA'; ?>', 'Umbral RDC 75%: Riego al bajar de 50%')">
                 <div class="surco-info-header">
                     <div class="surco-name">
-                        <span>🌿</span> Surco 2: Tratamiento al 75% (Riego Deficitario Moderado)
+                        <span style="font-weight:700; color:#0284C7; margin-right:4px;">[S2]</span> Surco 2: Tratamiento al 75% (Riego Deficitario Moderado)
                     </div>
                     <div class="surco-tags">
                         <span class="surco-tag">Humedad: <?php echo number_format($mapa_s75, 1); ?>%</span>
@@ -449,7 +450,7 @@ if ($mapa_s50 >= 40.0) {
                 <div class="bolsas-track">
                     <?php for ($i = 28; $i <= 54; $i++): ?>
                         <div class="bolsa-item bolsa-<?php echo $color_s2; ?>" title="Bolsa #<?php echo $i; ?> (Surco 2 - 75%) - Humedad: <?php echo number_format($mapa_s75, 1); ?>%">
-                            <span class="bolsa-sprout">🌱</span>
+                            <span class="bolsa-sprout" style="font-size:0.68rem; font-weight:800; color:#0284C7;">&bull;</span>
                         </div>
                     <?php endfor; ?>
                 </div>
@@ -459,7 +460,7 @@ if ($mapa_s50 >= 40.0) {
             <div class="surco-row surco-<?php echo $color_s3; ?>" onclick="mostrarDetalleSurco(3, 'Surco 3: Tratamiento 50% (Déficit Severo TinyML)', '<?php echo number_format($mapa_s50, 1); ?>%', '<?php echo $texto_s3; ?>', 'Electroválvula 3 (V3)', 'Bolsas #55 a #81', '<?php echo $mapa_v3 ? 'ABIERTA' : 'CERRADA'; ?>', 'Supervisión TinyML: Mantener > PMP (30%)')">
                 <div class="surco-info-header">
                     <div class="surco-name">
-                        <span>🌾</span> Surco 3: Tratamiento al 50% (Riego Deficitario Severo — TinyML)
+                        <span style="font-weight:700; color:#9333EA; margin-right:4px;">[S3]</span> Surco 3: Tratamiento al 50% (Riego Deficitario Severo — TinyML)
                     </div>
                     <div class="surco-tags">
                         <span class="surco-tag">Humedad: <?php echo number_format($mapa_s50, 1); ?>%</span>
@@ -474,7 +475,7 @@ if ($mapa_s50 >= 40.0) {
                 <div class="bolsas-track">
                     <?php for ($i = 55; $i <= 81; $i++): ?>
                         <div class="bolsa-item bolsa-<?php echo $color_s3; ?>" title="Bolsa #<?php echo $i; ?> (Surco 3 - 50%) - Humedad: <?php echo number_format($mapa_s50, 1); ?>%">
-                            <span class="bolsa-sprout">🌱</span>
+                            <span class="bolsa-sprout" style="font-size:0.68rem; font-weight:800; color:#9333EA;">&bull;</span>
                         </div>
                     <?php endfor; ?>
                 </div>

@@ -1,17 +1,32 @@
-function prueba(){
-	 document.write('Prueba de JS');
+/**
+ * script.js - Utilidades JavaScript Generales del Sistema de Monitoreo
+ * Semillero STEM - COTECNOVA
+ */
+
+/**
+ * Control del Menú Hamburguesa Lateral (Off-Canvas Drawer)
+ * @param {boolean} [forzar] - true para abrir, false para cerrar, omitir para alternar
+ */
+function toggleMenuDrawer(forzar) {
+    const drawer = document.getElementById('menuDrawer');
+    const backdrop = document.getElementById('menuBackdrop');
+    if (!drawer || !backdrop) return;
+    
+    const abrir = (forzar !== undefined) ? forzar : !drawer.classList.contains('drawer-open');
+    if (abrir) {
+        drawer.classList.add('drawer-open');
+        backdrop.classList.add('backdrop-active');
+        document.body.classList.add('menu-open-locked');
+    } else {
+        drawer.classList.remove('drawer-open');
+        backdrop.classList.remove('backdrop-active');
+        document.body.classList.remove('menu-open-locked');
+    }
 }
 
-function encriptar(){
-	var plaintext = "Palabra"; 
-    var encrypted = CryptoJS.AES.encrypt(plaintext, "Secret Passphrase"); 
-    alert("El texto a encriptar es: " + plaintext + " y encriptado es: " + encrypted.toString()); 
-
-}
-
-function desencriptar(){
-    var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase"); 
-    var encrptedText2 = decrypted.toString(CryptoJS.enc.Utf8); 
-    // var decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8); 
-    alert("El texto encriptado es: " + encrypted.toString + " y desencriptado es: " + encrptedText2); 
-}
+// Cierre automático al pulsar la tecla Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        toggleMenuDrawer(false);
+    }
+});

@@ -67,6 +67,36 @@ header, HEADER {
   gap: 16px;
 }
 
+/* Botón Menú Hamburguesa */
+.btn-hamburger {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  border-radius: 9px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-right: 4px;
+}
+
+.btn-hamburger:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-hamburger-text {
+  display: inline-block;
+  letter-spacing: 0.3px;
+}
+
 .header-logo-img {
   height: 52px;
   width: auto;
@@ -381,23 +411,91 @@ header, HEADER {
 }
 
 /* ==========================================================================
-   LAYOUT PRINCIPAL: ASIDE & SECTION
+   MENU HAMBURGUESA OFF-CANVAS (DRAWER) Y LAYOUT
    ========================================================================== */
-.Aside-css {
-  background: #FAFCFA;
-  width: 230px;
-  min-height: 600px;
-  padding: 1.5rem 0.9rem;
-  float: left;
-  border-right: 1px solid #E6ECE8;
+.Aside-css.drawer-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 100vh;
+  max-width: 85vw;
+  background: #FFFFFF;
+  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  transform: translateX(-105%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  float: none;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1.5px solid #E2E8F0;
+  padding: 1.5rem 1.4rem;
   box-sizing: border-box;
-  text-align: center;
+  text-align: left;
+}
+
+.Aside-css.drawer-menu.drawer-open {
+  transform: translateX(0);
+}
+
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.menu-backdrop.backdrop-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.menu-open-locked {
+  overflow: hidden;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.drawer-close-btn {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748B;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: #FEE2E2;
+  color: #EF4444;
+  border-color: #FCA5A5;
 }
 
 .aside-brand-wrap {
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.2rem;
   border-bottom: 1px dashed #E2E8F0;
+  text-align: center;
 }
 
 .aside-badge-stem {
@@ -410,7 +508,30 @@ header, HEADER {
   letter-spacing: 1px;
   padding: 3px 10px;
   border-radius: 12px;
-  margin-bottom: 8px;
+}
+
+.drawer-user-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.drawer-user-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.drawer-user-role {
+  display: inline-block;
+  font-size: 0.74rem;
+  color: #00602F;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-top: 4px;
+  font-weight: 600;
 }
 
 .Aside-css .Imagenes_Base {
@@ -432,9 +553,9 @@ header, HEADER {
   color: #2D3748 !important;
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 8px;
-  padding: 11px 14px;
-  font-size: 0.82rem;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.86rem;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
@@ -442,14 +563,16 @@ header, HEADER {
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   margin: 0;
 }
 
 .nav-btn .nav-icon {
-  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-btn:hover {
@@ -488,6 +611,9 @@ header, HEADER {
   box-shadow: 0 4px 10px rgba(190, 18, 60, 0.3) !important;
 }
 
+/* ==========================================================================
+   SECCION PRINCIPAL A PANTALLA COMPLETA
+   ========================================================================== */
 section {
   display: block;
   overflow: hidden;
@@ -497,9 +623,10 @@ section {
 
 .Section-css {
   background: #FFFFFF;
-  padding: 2rem 2.5rem;
+  padding: 2.2rem 3rem;
   margin: 0;
   width: 100%;
+  float: none;
   box-sizing: border-box;
   min-height: 600px;
 }

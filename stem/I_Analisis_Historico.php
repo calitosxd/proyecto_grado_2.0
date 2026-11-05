@@ -145,11 +145,56 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 .olap-header-box {
     background: #FFFFFF;
     border-radius: 12px;
-    padding: 1.5rem 1.8rem;
+    padding: 1.4rem 1.8rem;
     margin-bottom: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 96, 47, 0.08);
     border: 1px solid #E2E8F0;
     border-left: 6px solid #00602F;
+}
+.olap-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.olap-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.olap-period-chip {
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+.btn-sub-menu-olap {
+    background: linear-gradient(135deg, #00602F 0%, #004d25 100%);
+    color: #FFFFFF;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(0, 96, 47, 0.25);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-sub-menu-olap:hover {
+    background: linear-gradient(135deg, #EE7117 0%, #d96514 100%);
+    box-shadow: 0 4px 14px rgba(238, 113, 23, 0.35);
+    transform: translateY(-1px);
 }
 .olap-title {
     font-size: 1.45rem;
@@ -212,58 +257,210 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 .kpi-border-red { border-top: 4px solid #EF4444; }
 .kpi-border-blue { border-top: 4px solid #0284C7; }
 
-.filter-bar {
+/* Drawer de Filtros y Herramientas del Análisis (Off-Canvas Lateral Derecho) */
+.olap-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.olap-drawer-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.olap-drawer-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    max-width: 90vw;
+    height: 100vh;
+    background: #FFFFFF;
+    box-shadow: -6px 0 30px rgba(0, 0, 0, 0.2);
+    z-index: 10002;
+    transform: translateX(105%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-left: 1.5px solid #E2E8F0;
+    box-sizing: border-box;
+}
+.olap-drawer-panel.drawer-open {
+    transform: translateX(0);
+}
+.olap-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem 1.6rem 1.2rem 1.6rem;
+    border-bottom: 1.5px solid #F1F5F9;
+    background: #F8FAFC;
+}
+.olap-drawer-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #00602F;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.olap-drawer-sub {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.45;
+}
+.olap-drawer-body {
+    padding: 1.5rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.olap-drawer-section {
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 1.8rem;
+    border-radius: 12px;
+    padding: 1.2rem 1.3rem;
+}
+.drawer-section-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #1E293B;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
 }
-.filter-form {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+.drawer-section-desc {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-bottom: 14px;
+    line-height: 1.45;
 }
-.filter-form label {
+.drawer-input-group {
+    margin-bottom: 12px;
+}
+.drawer-input-group label {
+    display: block;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #475569;
+    color: #334155;
+    margin-bottom: 5px;
 }
-.filter-form input[type="date"] {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #CBD5E1;
-    font-size: 0.85rem;
+.drawer-input-group input[type="date"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.88rem;
     background: #FFFFFF;
+    color: #1E293B;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
-.btn-olap {
-    padding: 7px 16px;
-    border-radius: 6px;
-    font-size: 0.84rem;
-    font-weight: 600;
+.drawer-input-group input[type="date"]:focus {
+    outline: none;
+    border-color: #00602F;
+    box-shadow: 0 0 0 3px rgba(0, 96, 47, 0.15);
+}
+.drawer-form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+}
+.btn-drawer-action {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 0.86rem;
+    font-weight: 700;
     cursor: pointer;
     border: none;
-    transition: all 0.2s ease;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
-.btn-olap-primary { background: #00602F; color: #FFFFFF; }
-.btn-olap-primary:hover { background: #004D25; }
-.btn-olap-secondary { background: #E2E8F0; color: #334155; }
-.btn-olap-secondary:hover { background: #CBD5E1; }
-.btn-olap-export { background: #EE7117; color: #FFFFFF; }
-.btn-olap-export:hover { background: #D96514; }
-.btn-olap-info { background: #0F766E; color: #FFFFFF; }
-.btn-olap-info:hover { background: #115E59; }
-.btn-olap-print { background: #0284C7; color: #FFFFFF; }
-.btn-olap-print:hover { background: #0369A1; }
+.btn-drawer-primary {
+    background: linear-gradient(135deg, #00602F 0%, #004d25 100%);
+    color: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(0, 96, 47, 0.2);
+}
+.btn-drawer-primary:hover {
+    background: linear-gradient(135deg, #004d25 0%, #00361a 100%);
+    transform: translateY(-1px);
+}
+.btn-drawer-secondary {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #334155;
+}
+.btn-drawer-secondary:hover {
+    background: #F1F5F9;
+    border-color: #94A3B8;
+}
+.btn-drawer-info {
+    background: linear-gradient(135deg, #0F766E 0%, #115E59 100%);
+    color: #FFFFFF;
+}
+.btn-drawer-info:hover {
+    background: #115E59;
+}
+.drawer-tools-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.btn-drawer-tool {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #1E293B;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+.btn-drawer-tool:hover {
+    border-color: #00602F;
+    background: #F0FDF4;
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(0, 96, 47, 0.08);
+}
+.btn-drawer-tool strong {
+    display: block;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+.btn-drawer-tool small {
+    font-size: 0.75rem;
+    color: #64748B;
+}
+.tool-export svg { color: #EE7117; }
+.tool-print svg { color: #0284C7; }
+.tool-reload svg { color: #00602F; }
 
 /* Tarjeta de Síntesis y Eficiencia Hídrica */
 .efficiency-card {
@@ -491,7 +688,7 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
         margin: 0 !important;
         padding: 0 !important;
     }
-    .Aside-css, aside, header, HEADER, .filter-bar, .criterios-panel, footer, Plantilla-Footer {
+    .Aside-css, aside, header, HEADER, .filter-bar, .criterios-panel, footer, Plantilla-Footer, .olap-drawer-panel, .olap-drawer-backdrop, .btn-sub-menu-olap, .olap-period-chip, .tab-btn-filters {
         display: none !important;
     }
     .print-letterhead {
@@ -589,11 +786,11 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 .olap-nav-tabs {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: #FFFFFF;
     border: 1.5px solid #E2E8F0;
     border-radius: 14px;
-    padding: 8px 10px;
+    padding: 6px 10px;
     margin-bottom: 1.8rem;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     overflow-x: auto;
@@ -601,20 +798,21 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
     top: 75px;
     z-index: 90;
     backdrop-filter: blur(8px);
+    scrollbar-width: thin;
 }
 .tab-btn {
     background: transparent;
     border: none;
-    padding: 9px 18px;
-    border-radius: 10px;
-    font-size: 0.86rem;
+    padding: 8px 13px;
+    border-radius: 9px;
+    font-size: 0.82rem;
     font-weight: 700;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     white-space: nowrap;
 }
 .tab-btn:hover {
@@ -626,8 +824,22 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
     color: #FFFFFF;
     box-shadow: 0 4px 12px rgba(0, 96, 47, 0.25);
 }
+.tab-btn-filters {
+    margin-left: auto;
+    background: #ECFDF5;
+    border: 1.5px solid #A7F3D0;
+    color: #00602F;
+    font-weight: 700;
+}
+.tab-btn-filters:hover {
+    background: #00602F;
+    color: #FFFFFF;
+    border-color: #00602F;
+}
 .tab-icon {
-    font-size: 1.05rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
 }
 .olap-section-view {
     animation: fadeIn 0.25s ease-in-out;
@@ -656,72 +868,170 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             </div>
         </div>
 
-        <!-- Encabezado de la Sección -->
+        <!-- Encabezado de la Sección con Submenú de Filtros y Herramientas -->
         <div class="olap-header-box">
-            <div class="olap-title">
-                <span>📊</span> Análisis Dimensional de Datos Históricos (OLAP — Ralph Kimball)
-            </div>
-            <div class="olap-subtitle">
-                Métricas, cubos analíticos y detección de anomalías calculadas sobre el dataset histórico del Invernadero COTECNOVA.
-                <span style="font-weight: 600; color: #00602F;">(Procesado en <?php echo isset($data_olap['tiempo_proceso_ms']) ? $data_olap['tiempo_proceso_ms'] : '0'; ?> ms)</span>
-            </div>
-        </div>
+            <div class="olap-header-flex">
+                <div>
+                    <div class="olap-title">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#00602F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        Análisis Histórico de Variables Microambientales y Riego
+                    </div>
+                    <div class="olap-subtitle">
+                        Métricas históricas, comparativa de tratamientos y detección de anomalías en el Invernadero COTECNOVA.
+                        <span style="font-weight: 600; color: #00602F;">(Procesado en <?php echo isset($data_olap['tiempo_proceso_ms']) ? $data_olap['tiempo_proceso_ms'] : '0'; ?> ms)</span>
+                    </div>
+                </div>
 
-        <!-- Barra de Filtros y Acciones -->
-        <div class="filter-bar">
-            <form method="GET" action="I_Analisis_Historico.php" class="filter-form">
-                <input type="hidden" name="rol" value="<?php echo htmlspecialchars($rol); ?>">
-                <input type="hidden" name="permiso" value="<?php echo htmlspecialchars($permiso); ?>">
-
-                <label for="fecha_inicio">Desde:</label>
-                <input type="date" id="fecha_inicio" name="fecha_inicio" value="<?php echo htmlspecialchars($fecha_inicio); ?>" min="<?php echo $fecha_min_limite; ?>" max="<?php echo $fecha_max_limite; ?>">
-
-                <label for="fecha_fin">Hasta:</label>
-                <input type="date" id="fecha_fin" name="fecha_fin" value="<?php echo htmlspecialchars($fecha_fin); ?>" min="<?php echo $fecha_min_limite; ?>" max="<?php echo $fecha_max_limite; ?>">
-
-                <button type="submit" class="btn-olap btn-olap-primary">
-                    🔍 Filtrar
-                </button>
-                <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&fecha_inicio=<?php echo $fecha_min_limite; ?>&fecha_fin=<?php echo $fecha_max_limite; ?>" class="btn-olap btn-olap-secondary" style="text-decoration: none;">
-                    ↺ Período Fase 2 (2025 - 2026)
-                </a>
-            </form>
-
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button type="button" onclick="toggleCriterios()" class="btn-olap btn-olap-info" title="Consultar fundamentos agronómicos, umbrales FAO y tabla de verdad de electroválvulas">
-                    ℹ️ Guía Agronómica &amp; FAO
-                </button>
-                <button type="button" onclick="window.print()" class="btn-olap btn-olap-print" title="Preparar hoja ejecutiva limpia para imprimir o guardar en PDF (Ctrl + P)">
-                    📄 Ficha PDF / Imprimir
-                </button>
-                <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&recargar=1&fecha_inicio=<?php echo urlencode($fecha_inicio); ?>&fecha_fin=<?php echo urlencode($fecha_fin); ?>" class="btn-olap btn-olap-secondary" style="text-decoration: none;" title="Forzar re-análisis del CSV y actualizar caché">
-                    ⚡ Recalcular
-                </a>
-                <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&exportar=1&fecha_inicio=<?php echo urlencode($fecha_inicio); ?>&fecha_fin=<?php echo urlencode($fecha_fin); ?>" class="btn-olap btn-olap-export" style="text-decoration: none;">
-                    📥 Exportar CSV
-                </a>
+                <div class="olap-header-actions">
+                    <div class="olap-period-chip" title="Rango de fechas aplicado actualmente">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span><?php echo date('d/m/Y', strtotime($fecha_inicio)); ?> &ndash; <?php echo date('d/m/Y', strtotime($fecha_fin)); ?></span>
+                    </div>
+                    <button type="button" class="btn-sub-menu-olap" onclick="toggleFiltrosDrawer(true)" id="btnOpenFiltros" title="Abrir filtros de fecha, herramientas de exportación y guía FAO">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <span>Filtros y Herramientas</span>
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- Fondo oscuro difuminado para el Drawer de Filtros -->
+        <div class="olap-drawer-backdrop" id="backdropFiltrosOlap" onclick="toggleFiltrosDrawer(false)"></div>
+
+        <!-- Drawer Lateral de Filtros y Herramientas del Análisis (Off-Canvas Derecho) -->
+        <aside class="olap-drawer-panel" id="drawerFiltrosOlap" aria-label="Filtros y Herramientas">
+            <div class="olap-drawer-header">
+                <div class="olap-drawer-title-wrap">
+                    <div class="olap-drawer-title">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#00602F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <span>Filtros y Herramientas</span>
+                    </div>
+                    <p class="olap-drawer-sub">Gestión temporal, exportación y parámetros del análisis histórico.</p>
+                </div>
+                <button type="button" class="drawer-close-btn" onclick="toggleFiltrosDrawer(false)" aria-label="Cerrar panel">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="olap-drawer-body">
+                <!-- Bloque 1: Rango Temporal de Filtro -->
+                <div class="olap-drawer-section">
+                    <div class="drawer-section-title">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span>Rango Temporal de Consulta</span>
+                    </div>
+                    <p class="drawer-section-desc">Seleccione el intervalo entre el 01/01/2025 y el 16/04/2026 para recalcular las agregaciones.</p>
+
+                    <form method="GET" action="I_Analisis_Historico.php" class="drawer-filter-form">
+                        <input type="hidden" name="rol" value="<?php echo htmlspecialchars($rol); ?>">
+                        <input type="hidden" name="permiso" value="<?php echo htmlspecialchars($permiso); ?>">
+
+                        <div class="drawer-input-group">
+                            <label for="fecha_inicio">Desde:</label>
+                            <input type="date" id="fecha_inicio" name="fecha_inicio" value="<?php echo htmlspecialchars($fecha_inicio); ?>" min="<?php echo $fecha_min_limite; ?>" max="<?php echo $fecha_max_limite; ?>">
+                        </div>
+
+                        <div class="drawer-input-group">
+                            <label for="fecha_fin">Hasta:</label>
+                            <input type="date" id="fecha_fin" name="fecha_fin" value="<?php echo htmlspecialchars($fecha_fin); ?>" min="<?php echo $fecha_min_limite; ?>" max="<?php echo $fecha_max_limite; ?>">
+                        </div>
+
+                        <div class="drawer-form-actions">
+                            <button type="submit" class="btn-drawer-action btn-drawer-primary">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <span>Aplicar Filtro de Fechas</span>
+                            </button>
+                            <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&fecha_inicio=<?php echo $fecha_min_limite; ?>&fecha_fin=<?php echo $fecha_max_limite; ?>" class="btn-drawer-action btn-drawer-secondary">
+                                <span>Restablecer Período Completo (2025-2026)</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Bloque 2: Herramientas de Exportación y Descarga -->
+                <div class="olap-drawer-section">
+                    <div class="drawer-section-title">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>Exportación &amp; Reportes</span>
+                    </div>
+                    <div class="drawer-tools-grid">
+                        <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&exportar=1&fecha_inicio=<?php echo urlencode($fecha_inicio); ?>&fecha_fin=<?php echo urlencode($fecha_fin); ?>" class="btn-drawer-tool tool-export">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            <div>
+                                <strong>Exportar Dataset a CSV</strong>
+                                <small>Formato estructurado con BOM UTF-8 (Excel)</small>
+                            </div>
+                        </a>
+
+                        <button type="button" onclick="toggleFiltrosDrawer(false); window.print();" class="btn-drawer-tool tool-print">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            <div>
+                                <strong>Imprimir Reporte Técnico</strong>
+                                <small>Ficha ejecutiva limpia para PDF (Ctrl + P)</small>
+                            </div>
+                        </button>
+
+                        <a href="I_Analisis_Historico.php?rol=<?php echo $rol; ?>&permiso=<?php echo $permiso; ?>&recargar=1&fecha_inicio=<?php echo urlencode($fecha_inicio); ?>&fecha_fin=<?php echo urlencode($fecha_fin); ?>" class="btn-drawer-tool tool-reload">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                            <div>
+                                <strong>Actualizar Caché OLAP</strong>
+                                <small>Recomputar métricas en caliente</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Bloque 3: Criterios Agronómicos FAO -->
+                <div class="olap-drawer-section">
+                    <div class="drawer-section-title">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Criterios &amp; Umbrales FAO</span>
+                    </div>
+                    <p class="drawer-section-desc">Consulte los rangos agronómicos de temperatura, humedad y los umbrales de activación por electroválvula.</p>
+                    <button type="button" onclick="toggleFiltrosDrawer(false); toggleCriterios();" class="btn-drawer-action btn-drawer-info">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>Ver Guía Agronómica y Umbrales FAO</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
 
         <!-- Menú Visual de Navegación por Secciones del Análisis -->
         <div class="olap-nav-tabs">
             <button type="button" class="tab-btn active" onclick="cambiarSeccionOlap('todas', this)">
-                <span class="tab-icon">👁️</span> Vista Completa
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
+                <span>Vista Completa</span>
             </button>
             <button type="button" class="tab-btn" onclick="cambiarSeccionOlap('resumen', this)">
-                <span class="tab-icon">📈</span> KPIs &amp; Ahorro Hídrico
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
+                <span>Indicadores &amp; Ahorro</span>
             </button>
             <button type="button" class="tab-btn" onclick="cambiarSeccionOlap('mapa', this)">
-                <span class="tab-icon">🗺️</span> Mapa 2D del Cultivo
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg></span>
+                <span>Distribución 2D</span>
             </button>
             <button type="button" class="tab-btn" onclick="cambiarSeccionOlap('graficos', this)">
-                <span class="tab-icon">📊</span> Gráficos Microambientales
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span>
+                <span>Gráficos</span>
             </button>
             <button type="button" class="tab-btn" onclick="cambiarSeccionOlap('tabla', this)">
-                <span class="tab-icon">📋</span> Tablero Mensual OLAP
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg></span>
+                <span>Tabla Mensual</span>
             </button>
             <button type="button" class="tab-btn" onclick="cambiarSeccionOlap('criterios', this)">
-                <span class="tab-icon">ℹ️</span> Criterios FAO &amp; Válvulas
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></span>
+                <span>Criterios FAO</span>
+            </button>
+            <button type="button" class="tab-btn tab-btn-filters" onclick="toggleFiltrosDrawer(true)" title="Abrir filtros de fecha y herramientas de exportación">
+                <span class="tab-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></span>
+                <span>Filtros &amp; Herramientas</span>
             </button>
         </div>
 
@@ -729,9 +1039,10 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
         <div class="criterios-panel" id="panelCriterios">
             <div class="criterios-header">
                 <div class="criterios-title">
-                    🌿 Criterios Agronómicos, Umbrales FAO y Modelo de Decisión (Fase 1)
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#00602F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12c0-2.76 1.12-5.26 2.93-7.07"></path></svg>
+                    Criterios Agronómicos, Umbrales FAO y Modelo de Decisión (Fase 1)
                 </div>
-                <button type="button" class="criterios-close-btn" onclick="toggleCriterios()" title="Cerrar panel">✕</button>
+                <button type="button" class="criterios-close-btn" onclick="toggleCriterios()" title="Cerrar panel">&times;</button>
             </div>
 
             <p style="font-size: 0.86rem; color: #475569; margin-bottom: 1.2rem; line-height: 1.55;">
@@ -912,7 +1223,10 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             <div class="olap-kpi-grid">
             <div class="olap-kpi-card kpi-border-blue">
                 <div>
-                    <div class="kpi-title">Capturas Analizadas <span>📦</span></div>
+                    <div class="kpi-title">
+                        Mediciones Registradas
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; float:right;"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                    </div>
                     <div class="kpi-value"><?php echo number_format($kpis['total_capturas'] ?? 0); ?></div>
                 </div>
                 <div class="kpi-subtext">Horas muestreadas (9 sensores c/u)</div>
@@ -920,15 +1234,21 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 
             <div class="olap-kpi-card kpi-border-green">
                 <div>
-                    <div class="kpi-title">Hechos Atómicos OLAP <span>⚡</span></div>
+                    <div class="kpi-title">
+                        Variables Procesadas
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#00602F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; float:right;"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    </div>
                     <div class="kpi-value"><?php echo number_format($kpis['total_hechos'] ?? 0); ?></div>
                 </div>
-                <div class="kpi-subtext">Esquema en Estrella (Kimball)</div>
+                <div class="kpi-subtext">Total de lecturas individuales</div>
             </div>
 
             <div class="olap-kpi-card kpi-border-red">
                 <div>
-                    <div class="kpi-title">Anomalías Detectadas <span>⚠️</span></div>
+                    <div class="kpi-title">
+                        Lecturas Fuera de Rango
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; float:right;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
                     <div class="kpi-value" style="color: #DC2626;"><?php echo number_format($kpis['total_anomalias'] ?? 0); ?></div>
                 </div>
                 <div class="kpi-subtext"><?php echo $kpis['pct_anomalias'] ?? 0; ?>% fuera de umbral agronómico</div>
@@ -936,10 +1256,13 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 
             <div class="olap-kpi-card kpi-border-orange">
                 <div>
-                    <div class="kpi-title">Horas Déficit Hídrico <span>💧</span></div>
+                    <div class="kpi-title">
+                        Requerimiento de Riego
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; float:right;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    </div>
                     <div class="kpi-value" style="color: #D97706;"><?php echo number_format($kpis['total_riego_alertas'] ?? 0); ?></div>
                 </div>
-                <div class="kpi-subtext">Horas requiriendo riego en surcos</div>
+                <div class="kpi-subtext">Horas con suelo en umbral de riego</div>
             </div>
         </div>
 
@@ -947,7 +1270,8 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
         <div class="efficiency-card">
             <div class="efficiency-header">
                 <div class="efficiency-title">
-                    <span>💧</span> Conclusiones de Ahorro y Eficiencia Hídrica del Proyecto
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    Conclusiones de Ahorro y Eficiencia Hídrica del Proyecto
                 </div>
                 <div class="efficiency-badge">
                     Validación Agronómica &amp; IoT
@@ -965,13 +1289,13 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
                 <div class="efficiency-mini-box">
                     <div class="efficiency-mini-label">Tratamiento Moderado (75%)</div>
                     <div class="efficiency-mini-val" style="color: #0D9488;"><?php echo number_format($deficit_75); ?> h</div>
-                    <div style="font-size: 0.72rem; color: #64748B;">RDC con reducción controlada</div>
+                    <div style="font-size: 0.72rem; color: #64748B;">Riego deficitario controlado</div>
                 </div>
 
                 <div class="efficiency-mini-box">
                     <div class="efficiency-mini-label">Tratamiento Severo (50%)</div>
                     <div class="efficiency-mini-val" style="color: #059669;"><?php echo number_format($deficit_50); ?> h</div>
-                    <div style="font-size: 0.72rem; color: #64748B;">RDC optimizado con TinyML</div>
+                    <div style="font-size: 0.72rem; color: #64748B;">Supervisado con TinyML</div>
                 </div>
 
                 <div class="efficiency-mini-box" style="background: #ECFDF5; border: 1.5px solid #10B981;">
@@ -983,15 +1307,15 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 
             <!-- Párrafo de Síntesis para Sustentación ante Jurados -->
             <div class="efficiency-text">
-                <strong>🌱 Síntesis Agronómica para Sustentación ante Evaluadores:</strong><br>
-                En concordancia con los ensayos experimentales de la Fase 1 y el análisis dimensional del banco de datos histórico, 
+                <strong>Síntesis de Validación Agronómica:</strong><br>
+                En concordancia con los ensayos experimentales de la Fase 1 y el análisis de la base de datos histórica, 
                 <strong>el tratamiento al 50% redujo el tiempo de riego requerido en un 38% respecto al surco al 100%</strong>, manteniendo la humedad del sustrato continuamente por encima del <strong>Punto de Marchitez Permanente (PMP ≈ 30%)</strong>.
                 Esta evidencia conecta la ingeniería informática y sensórica IoT (DHT20, BH1750, LM393) con el modelo de decisión TinyML en el microcontrolador ESP32, demostrando que el proyecto de grado cumplió satisfactoriamente su objetivo fundamental: <strong>optimizar sustancialmente el recurso hídrico en la agricultura de precisión de Cartago sin comprometer la viabilidad fisiológica del cultivo</strong>.
             </div>
         </div>
         </div> <!-- Fin #secResumen -->
 
-        <!-- SECCIÓN 2: 🗺️ Mapa Visual 2D del Invernadero (3 Surcos y 81 Bolsas) -->
+        <!-- SECCIÓN 2: Distribución Espacial del Cultivo (3 Surcos y 81 Bolsas) -->
         <div id="secMapa" class="olap-section-view">
             <?php
             $mapa_s100 = ($prom_sue100 > 5.0) ? $prom_sue100 : 92.0;
@@ -1006,14 +1330,15 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             ?>
         </div> <!-- Fin #secMapa -->
 
-        <!-- SECCIÓN 3: 📊 Gráficos Analíticos Interactivos (Cubo OLAP) -->
+        <!-- SECCIÓN 3: Gráficos de Comportamiento Microambiental y Riego -->
         <div id="secGraficos" class="olap-section-view">
             <!-- Gráficos Analíticos Interactivos (Fila 1) -->
             <div class="charts-grid">
             <!-- Gráfico 1: Microclima Interior vs Exterior -->
             <div class="chart-card">
                 <div class="chart-card-title">
-                    <span>🌡️ Microclima: Temperatura y Humedad</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
+                    <span>Microclima: Temperatura y Humedad Relativa</span>
                     <span style="font-size: 0.72rem; color: #00602F; font-weight: 600;">Interior vs Exterior</span>
                 </div>
                 <div class="chart-card-sub">Comparación mensual de promedios climáticos dentro y fuera del invernadero.</div>
@@ -1025,8 +1350,9 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             <!-- Gráfico 2: Comportamiento Hídrico de los 3 Surcos -->
             <div class="chart-card">
                 <div class="chart-card-title">
-                    <span>🌱 Humedad de Suelo por Surco (LM393)</span>
-                    <span style="font-size: 0.72rem; color: #EE7117; font-weight: 600;">Metas: 100%, 75% y 50%</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    <span>Humedad de Suelo por Surco (LM393)</span>
+                    <span style="font-size: 0.72rem; color: #EE7117; font-weight: 600;">Surcos 100%, 75% y 50%</span>
                 </div>
                 <div class="chart-card-sub">Seguimiento hídrico de los 3 tratamientos de almácigos frente a sus umbrales objetivo.</div>
                 <div class="chart-wrapper">
@@ -1040,7 +1366,8 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             <!-- Gráfico 3: Distribución por Franja Horaria -->
             <div class="chart-card">
                 <div class="chart-card-title">
-                    <span>🕒 Anomalías por Franja Horaria</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span>Lecturas Fuera de Rango por Franja Horaria</span>
                     <span style="font-size: 0.72rem; color: #64748B;">Ciclo Diario (24h)</span>
                 </div>
                 <div class="chart-card-sub">Incidencia de picos de estrés térmico e hídrico según el momento del día.</div>
@@ -1052,7 +1379,8 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
             <!-- Gráfico 4: Anomalías por Sensor Físico -->
             <div class="chart-card">
                 <div class="chart-card-title">
-                    <span>🔍 Detección de Anomalías por Sensor</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Diagnóstico de Alertas por Sensor</span>
                     <span style="font-size: 0.72rem; color: #64748B;">Diagnóstico Individual</span>
                 </div>
                 <div class="chart-card-sub">Total de registros fuera de rango para cada uno de los 9 sensores del sistema.</div>
@@ -1063,14 +1391,15 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
         </div>
         </div> <!-- Fin #secGraficos -->
 
-        <!-- SECCIÓN 4: 📋 Tablero Resumen Dimensional Mensual (OLAP) -->
+        <!-- SECCIÓN 4: Resumen Mensual de Sensores y Riego -->
         <div id="secTabla" class="olap-section-view">
             <!-- Tabla Resumen Dinámica Dimensional -->
             <div class="table-card">
                 <div class="chart-card-title" style="margin-bottom: 6px;">
-                    <span>📋 Tablero Resumen Dimensional Mensual (OLAP Roll-Up)</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#00602F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>
+                    <span>Resumen Mensual de Sensores y Riego</span>
                 </div>
-                <div class="chart-card-sub">Agregación analítica por períodos mensuales a partir de los 31.977 hechos atómicos.</div>
+                <div class="chart-card-sub">Agregación analítica por períodos mensuales a partir de los 31.977 registros históricos.</div>
                 
                 <div style="overflow-x: auto;">
                     <table class="olap-table">
@@ -1085,7 +1414,7 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
                                 <th>Suelo 100%</th>
                                 <th>Suelo 75%</th>
                                 <th>Suelo 50%</th>
-                                <th>Anomalías</th>
+                                <th>Alertas Fuera de Rango</th>
                                 <th>Déficit Riego (Horas)</th>
                             </tr>
                         </thead>
@@ -1105,7 +1434,7 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
                                         <td><span class="badge-anomalia"><?php echo number_format($m['anomalias']); ?></span></td>
                                         <td>
                                             <span class="badge-riego" title="S1: <?php echo $m['riego_alerta_100']; ?>h | S2: <?php echo $m['riego_alerta_75']; ?>h | S3: <?php echo $m['riego_alerta_50']; ?>h">
-                                                💧 <?php echo number_format($m['riego_alerta_100'] + $m['riego_alerta_75'] + $m['riego_alerta_50']); ?> h
+                                                <?php echo number_format($m['riego_alerta_100'] + $m['riego_alerta_75'] + $m['riego_alerta_50']); ?> h
                                             </span>
                                         </td>
                                     </tr>
@@ -1291,6 +1620,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});
+
+// Función interactiva para abrir / cerrar Drawer de Filtros y Herramientas del Análisis
+function toggleFiltrosDrawer(forzar) {
+    const drawer = document.getElementById('drawerFiltrosOlap');
+    const backdrop = document.getElementById('backdropFiltrosOlap');
+    if (!drawer || !backdrop) return;
+
+    const abrir = (forzar !== undefined) ? forzar : !drawer.classList.contains('drawer-open');
+    if (abrir) {
+        drawer.classList.add('drawer-open');
+        backdrop.classList.add('active');
+        document.body.classList.add('menu-open-locked');
+    } else {
+        drawer.classList.remove('drawer-open');
+        backdrop.classList.remove('active');
+        document.body.classList.remove('menu-open-locked');
+    }
+}
+
+// Cerrar drawer de filtros con la tecla Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        toggleFiltrosDrawer(false);
+    }
 });
 
 // Función interactiva para desplegar / ocultar panel de Criterios Agronómicos

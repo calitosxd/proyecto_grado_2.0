@@ -1,55 +1,38 @@
 <?php
-// Del BackEnd (L_Validar_Ingreso.php), se recibe los datos "rol" y "permisos" del usuario logueado correctamente.
-if (isset($_POST['rol']) && isset($_POST['permiso'])) {
-    $rol = $_POST['rol'];
-    $permiso = $_POST['permiso'];
-} else {
-    // Si por algún motivo, no llegan datos, las variables se declaran vacías.
-    $rol = null;
-    $permiso = null;
-}
-// Impresion de prueba de que el dato "rol" y "permisos" llegaron correctamente.
-//echo "Rol: " . $rol . "<br>";
-//echo "Permisos: " . $permiso;
-?>
-
-<!DOCTYPE html>
-<!--Esta página tenemos diseñada la plantilla donde se encuentra el Body-Head y Header.-->
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="../ASSETS/CSS/css.css">
-</head>
-</html>
-
-<!--Concatenador con las partes Head-Heater-Aside. -->
-<?php
-require('../ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
-/*include('LOGICA/L_Consultar_Personas.php');*/
+/*
+ * L_Usuarios_Borrar.php - Desactivacion Logica de Usuarios
+ * Semillero STEM - COTECNOVA
+ */
 include('L_Funciones.php');
-error_reporting(E_ERROR |  E_PARSE);
-?>
+error_reporting(E_ERROR | E_PARSE);
 
-<?php  
-//-------------validamos envio --------------------------------------------
-if(isset($_POST['id_usuario']))
-{
-	/*Se coteja que cada 'VALUE' que viene desde el metodo 'POST' contenga infomacion y sea el formato adecuado.*/
-	/*Con la funcion 'is_numeric', valido un 'TRUE' para caracteres numericos y un 'FALCE' para caracteres alfabeticos*/
-	if(empty($_POST["id_usuario"]) || is_numeric($_POST["id_usuario"]) === false)
-	{
-		echo "La identificación es requerida y no debe contener caracteres alfabéticos.";
-	}
-	if(empty($errores)) 
-	{
-		$id_usuario = filtrado($_POST['id_usuario']);
-	}
-	
-	Funcion_Eliminar_Usuario($id_usuario, $rol, $permiso);
+$sesion = Funcion_Gestionar_Sesion();
+$rol = $sesion['rol'];
+$permiso = $sesion['permiso'];
+
+require('../ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
+
+echo "<section><div class='Section-css' style='max-width: 650px; margin: 3rem auto; background: #FFFFFF; padding: 2rem; border-radius: 12px; border: 1px solid #E2E8F0; text-align: center;'>";
+
+// Verificacion de permisos de administrador
+if ($rol != 0 && $rol != 1) {
+    echo "<h2 style='color: #EF4444; margin-bottom: 1rem;'>Acceso no autorizado</h2>";
+    echo "<p style='color: #475569; margin-bottom: 1.5rem;'>No cuenta con los privilegios requeridos para desactivar usuarios.</p>";
+    echo "<a href='../I_Bienvenida.php' class='btn'>Volver al Inicio</a>";
+} else if (isset($_POST['id_usuario'])) {
+    $id_usuario = trim($_POST['id_usuario']);
+
+    if (empty($id_usuario) || !is_numeric($id_usuario)) {
+        echo "<h2 style='color: #EF4444; margin-bottom: 1rem;'>Identificador invalido</h2>";
+        echo "<p style='color: #475569;'>La identificacion proporcionada no es valida.</p>";
+    } else {
+        $id_usuario = filtrado($id_usuario);
+        Funcion_Eliminar_Usuario($id_usuario, $rol, $permiso);
+    }
+} else {
+    echo "<h2 style='color: #64748B;'>No se especifico usuario a desactivar.</h2>";
 }
-?>
 
-<!--Concatenador con la parte Footer. -->
-<?php
+echo "</div></section>";
 require('../ASSETS/PLANTILLAS/Plantilla-Footer.html');
-error_reporting(E_ERROR |  E_PARSE);
 ?>
