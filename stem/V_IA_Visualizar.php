@@ -10,9 +10,9 @@ $sesion = Funcion_Verificar_Autenticacion();
 $rol = $sesion['rol'];
 $permisos = $sesion['permiso'];
 
-// Rango por defecto establecido para la Fase 2 (2025 a 2026)
+// Rango por defecto establecido para la Fase 2 (2025 a la fecha actual)
 $fecha_min_limite = '2025-01-01';
-$fecha_max_limite = '2026-04-16';
+$fecha_max_limite = date('Y-m-d');
 
 $fecha_inicio = isset($_GET['fecha_inicio']) && !empty($_GET['fecha_inicio']) ? $_GET['fecha_inicio'] : $fecha_min_limite;
 $fecha_fin = isset($_GET['fecha_fin']) && !empty($_GET['fecha_fin']) ? $_GET['fecha_fin'] : $fecha_max_limite;

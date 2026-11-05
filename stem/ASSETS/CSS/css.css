@@ -24,7 +24,8 @@ body {
   min-height: 100vh;
 }
 
-#Body-css, .Body-css {
+#Body-css,
+.Body-css {
   background: #FFFFFF;
   max-width: 1400px;
   min-height: 94vh;
@@ -38,7 +39,8 @@ body {
 /* ==========================================================================
    HEADER INSTITUCIONAL & BARRA DE ESTADO
    ========================================================================== */
-header, HEADER {
+header,
+HEADER {
   width: 100%;
   display: block;
 }
@@ -183,9 +185,18 @@ header, HEADER {
 }
 
 @keyframes pulse-badge {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); box-shadow: 0 0 10px #EF4444; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 10px #EF4444;
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Panel Desplegable de Notificaciones */
@@ -211,8 +222,15 @@ header, HEADER {
 }
 
 @keyframes fadeInDropdown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .notif-header {
@@ -386,8 +404,15 @@ header, HEADER {
 }
 
 @keyframes slideInToast {
-  from { transform: translateX(110%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .toast-fade-out {
@@ -437,6 +462,7 @@ header, HEADER {
 .toast-danger {
   border-left-color: #EF4444;
 }
+
 .toast-danger .toast-icon {
   color: #EF4444;
 }
@@ -444,6 +470,7 @@ header, HEADER {
 .toast-warning {
   border-left-color: #F59E0B;
 }
+
 .toast-warning .toast-icon {
   color: #F59E0B;
 }
@@ -451,6 +478,7 @@ header, HEADER {
 .toast-success {
   border-left-color: #10B981;
 }
+
 .toast-success .toast-icon {
   color: #10B981;
 }
@@ -458,6 +486,7 @@ header, HEADER {
 .toast-info {
   border-left-color: #3B82F6;
 }
+
 .toast-info .toast-icon {
   color: #3B82F6;
 }
@@ -644,9 +673,19 @@ header, HEADER {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 .input-group {
@@ -1009,10 +1048,21 @@ section {
   box-shadow: 0 8px 20px rgba(0, 96, 47, 0.1);
 }
 
-.kpi-card.kpi-orange { border-top-color: #EE7117; }
-.kpi-card.kpi-blue   { border-top-color: #0284C7; }
-.kpi-card.kpi-green  { border-top-color: #00602F; }
-.kpi-card.kpi-yellow { border-top-color: #EAB308; }
+.kpi-card.kpi-orange {
+  border-top-color: #EE7117;
+}
+
+.kpi-card.kpi-blue {
+  border-top-color: #0284C7;
+}
+
+.kpi-card.kpi-green {
+  border-top-color: #00602F;
+}
+
+.kpi-card.kpi-yellow {
+  border-top-color: #EAB308;
+}
 
 .kpi-icon {
   font-size: 1.9rem;
@@ -1063,10 +1113,25 @@ section {
   margin-top: 2px;
 }
 
-.badge-green  { background: #DCFCE7; color: #166534; }
-.badge-orange { background: #FFEDD5; color: #9A3412; }
-.badge-blue   { background: #E0F2FE; color: #075985; }
-.badge-gray   { background: #F1F5F9; color: #475569; }
+.badge-green {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.badge-orange {
+  background: #FFEDD5;
+  color: #9A3412;
+}
+
+.badge-blue {
+  background: #E0F2FE;
+  color: #075985;
+}
+
+.badge-gray {
+  background: #F1F5F9;
+  color: #475569;
+}
 
 /* ==========================================================================
    TOOLBAR DE FILTROS & ACCIONES
@@ -1233,13 +1298,48 @@ section {
   white-space: nowrap;
 }
 
-.badge-v-green  { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
-.badge-v-blue   { background: #E0F2FE; color: #0369A1; border: 1px solid #7DD3FC; }
-.badge-v-orange { background: #FFEDD5; color: #C2410C; border: 1px solid #FDBA74; }
-.badge-v-purple { background: #F3E8FF; color: #7E22CE; border: 1px solid #D8B4FE; }
-.badge-v-teal   { background: #CCFBF1; color: #0F766E; border: 1px solid #5EEAD4; }
-.badge-v-red    { background: #FEE2E2; color: #B91C1C; border: 1px solid #FCA5A5; font-weight: 800; }
-.badge-v-gray   { background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1; }
+.badge-v-green {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+
+.badge-v-blue {
+  background: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #7DD3FC;
+}
+
+.badge-v-orange {
+  background: #FFEDD5;
+  color: #C2410C;
+  border: 1px solid #FDBA74;
+}
+
+.badge-v-purple {
+  background: #F3E8FF;
+  color: #7E22CE;
+  border: 1px solid #D8B4FE;
+}
+
+.badge-v-teal {
+  background: #CCFBF1;
+  color: #0F766E;
+  border: 1px solid #5EEAD4;
+}
+
+.badge-v-red {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+  font-weight: 800;
+}
+
+.badge-v-gray {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
 
 .log-text {
   font-size: 0.84rem;
@@ -1257,7 +1357,8 @@ section {
 /* ==========================================================================
    FOOTER INSTITUCIONAL (GRID 3 COLUMNAS)
    ========================================================================== */
-footer, FOOTER {
+footer,
+FOOTER {
   width: 100%;
   clear: both;
   display: block;
@@ -1826,14 +1927,17 @@ footer, FOOTER {
   .login-split-container {
     flex-direction: column;
   }
+
   .login-hero-panel {
     border-right: none;
     border-bottom: 4px solid #EE7117;
     padding: 2rem 1.5rem;
   }
+
   .login-card-panel {
     padding: 2rem 1.5rem;
   }
+
   .Aside-css {
     width: 100%;
     float: none;
@@ -1841,22 +1945,27 @@ footer, FOOTER {
     border-right: none;
     border-bottom: 1px solid #E6ECE8;
   }
+
   .aside-nav ul {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .nav-btn {
     width: auto;
   }
+
   .nav-logout-li {
     margin-top: 0;
     padding-top: 0;
     border-top: none;
   }
+
   .Section-css {
     padding: 1.5rem 1rem;
   }
+
   .filter-buttons {
     margin-left: 0;
     width: 100%;
@@ -1866,7 +1975,8 @@ footer, FOOTER {
 /* ==========================================================================
    MÓDULOS DE AUDITORÍA, TRAZABILIDAD Y BANCO DE IDEAS STEM
    ========================================================================== */
-.auditoria-container, .ideas-container {
+.auditoria-container,
+.ideas-container {
   padding: 1.8rem 2rem;
   background: #F8FAFC;
   min-height: 80vh;
@@ -1924,7 +2034,8 @@ footer, FOOTER {
   margin: 2px 0 0 0;
 }
 
-.btn-export-csv, .btn-primary-cotecnova {
+.btn-export-csv,
+.btn-primary-cotecnova {
   background: #00602F;
   color: #FFFFFF;
   padding: 10px 18px;
@@ -1940,7 +2051,8 @@ footer, FOOTER {
   transition: all 0.2s ease;
 }
 
-.btn-export-csv:hover, .btn-primary-cotecnova:hover {
+.btn-export-csv:hover,
+.btn-primary-cotecnova:hover {
   background: #004D25;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 96, 47, 0.2);
@@ -2102,10 +2214,25 @@ footer, FOOTER {
   display: inline-block;
 }
 
-.badge-info { background: #F1F5F9; color: #475569; }
-.badge-success { background: #DCFCE7; color: #15803D; }
-.badge-warning { background: #FEF3C7; color: #B45309; }
-.badge-danger { background: #FEE2E2; color: #B91C1C; }
+.badge-info {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.badge-success {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.badge-warning {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.badge-danger {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
 
 .col-desc {
   color: #334155;
@@ -2163,10 +2290,25 @@ footer, FOOTER {
   text-transform: uppercase;
 }
 
-.cat-Agronomia { background: #DCFCE7; color: #15803D; }
-.cat-TinyML_Hardware { background: #E0E7FF; color: #4338CA; }
-.cat-Software_Web { background: #E0F2FE; color: #0369A1; }
-.cat-General { background: #F1F5F9; color: #475569; }
+.cat-Agronomia {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.cat-TinyML_Hardware {
+  background: #E0E7FF;
+  color: #4338CA;
+}
+
+.cat-Software_Web {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.cat-General {
+  background: #F1F5F9;
+  color: #475569;
+}
 
 .idea-status-badge {
   font-size: 0.7rem;
@@ -2175,10 +2317,25 @@ footer, FOOTER {
   border-radius: 6px;
 }
 
-.status-propuesta { background: #FEF3C7; color: #B45309; }
-.status-evaluacion { background: #DBEAFE; color: #1E40AF; }
-.status-aprobada { background: #D1FAE5; color: #065F46; }
-.status-implementada { background: #DCFCE7; color: #166534; }
+.status-propuesta {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.status-evaluacion {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.status-aprobada {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-implementada {
+  background: #DCFCE7;
+  color: #166534;
+}
 
 .idea-title {
   font-size: 1rem;
@@ -2266,7 +2423,10 @@ footer, FOOTER {
 /* Modales */
 .modal-backdrop-custom {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(4px);
   z-index: 999999;
@@ -2320,7 +2480,9 @@ footer, FOOTER {
   margin-bottom: 6px;
 }
 
-.form-group-custom input, .form-group-custom select, .form-group-custom textarea {
+.form-group-custom input,
+.form-group-custom select,
+.form-group-custom textarea {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid #CBD5E1;
@@ -2331,7 +2493,9 @@ footer, FOOTER {
   outline: none;
 }
 
-.form-group-custom input:focus, .form-group-custom select:focus, .form-group-custom textarea:focus {
+.form-group-custom input:focus,
+.form-group-custom select:focus,
+.form-group-custom textarea:focus {
   border-color: #00602F;
   box-shadow: 0 0 0 3px rgba(0, 96, 47, 0.15);
 }
