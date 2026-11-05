@@ -1,16 +1,10 @@
 <?php
-// Del BackEnd (L_Validar_Ingreso.php), se recibe los datos "rol" y "permisos" del usuario logueado correctamente.
-if (isset($_POST['roles']) && isset($_POST['permisos'])) {
-    $rol = $_POST['roles'];
-    $permiso = $_POST['permisos'];
-} else {
-    // Si por algún motivo, no llegan datos, las variables se declaran vacías.
-    $rol = null;
-    $permiso = null;
-}
-// Impresion de prueba de que el dato "rol" y "permisos" llegaron correctamente.
-//echo "Rol: " . $rol . "<br>";
-//echo "Permisos: " . $permiso;
+require_once('LOGICA/L_Funciones.php');
+$sesion = Funcion_Verificar_Autenticacion([0, 1, 2]);
+$rol = $sesion['rol'];
+$permiso = $sesion['permiso'];
+$roles = $rol;
+$permisos = $permiso;
 ?>
 
 

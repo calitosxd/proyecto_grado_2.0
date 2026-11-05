@@ -6,7 +6,7 @@
  */
 
 require_once('LOGICA/L_Funciones.php');
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion();
 $rol = $sesion['rol'];
 $permiso = $sesion['permiso'];
 
@@ -213,3 +213,4 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php
 require('ASSETS/PLANTILLAS/Plantilla-Footer.html');
 ?>
+

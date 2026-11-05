@@ -6,7 +6,7 @@
  */
 
 require_once('LOGICA/L_Funciones.php');
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion();
 $rol = $sesion['rol'];
 $permiso = $sesion['permiso'];
 
@@ -167,3 +167,4 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 <?php
 require('ASSETS/PLANTILLAS/Plantilla-Footer.html');
 ?>
+

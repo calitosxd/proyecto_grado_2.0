@@ -4,14 +4,9 @@
  * Semillero STEM - COTECNOVA
  */
 require_once('LOGICA/L_Funciones.php');
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion([0, 1, 2]);
 $rol = $sesion['rol'];
 $permiso = $sesion['permiso'];
-
-if ($rol === null) {
-    header("Location: index.php");
-    exit;
-}
 
 require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 error_reporting(E_ERROR | E_PARSE);

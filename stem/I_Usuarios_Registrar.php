@@ -4,14 +4,9 @@
  * Semillero STEM - COTECNOVA
  */
 require_once('LOGICA/L_Funciones.php');
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion([0, 1]);
 $rol = $sesion['rol'];
 $permisos = $sesion['permiso'];
-
-if ($rol === null) {
-    header("Location: index.php");
-    exit;
-}
 
 date_default_timezone_set('America/Bogota');
 $fecha_actual = date("Y-m-d");

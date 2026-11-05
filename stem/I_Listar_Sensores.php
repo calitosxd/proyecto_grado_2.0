@@ -6,14 +6,9 @@
 require_once('LOGICA/L_Funciones.php');
 error_reporting(E_ERROR | E_PARSE);
 
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion();
 $rol = $sesion['rol'];
 $permisos = $sesion['permiso'];
-
-if ($rol === null) {
-    header("Location: index.php");
-    exit;
-}
 
 // Rango por defecto establecido para la Fase 2 (2025 a 2026)
 $fecha_min_limite = '2025-01-01';

@@ -3,12 +3,24 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-index.php');
 error_reporting(E_ERROR | E_PARSE);
 
 $error_msg = "";
+$success_msg = "";
+
 if (isset($_GET['error'])) {
     if ($_GET['error'] == '1') {
         $error_msg = "Usuario o contraseña incorrectos. Por favor verifique sus datos.";
     } elseif ($_GET['error'] == '2') {
         $error_msg = "Este usuario se encuentra inactivo. Comuníquese con el administrador.";
+    } elseif ($_GET['error'] == 'acceso_denegado') {
+        $error_msg = "Acceso restringido: Debe iniciar sesión con sus credenciales para ingresar.";
+    } elseif ($_GET['error'] == 'sesion_expirada') {
+        $error_msg = "Su sesión ha expirado por inactividad. Ingrese nuevamente.";
+    } elseif ($_GET['error'] == 'rol_no_autorizado') {
+        $error_msg = "Su rol no tiene privilegios para acceder al módulo solicitado.";
     }
+}
+
+if (isset($_GET['msg']) && $_GET['msg'] == 'sesion_cerrada') {
+    $success_msg = "Ha cerrado su sesión de manera segura. ¡Hasta pronto!";
 }
 ?>
 
@@ -68,6 +80,13 @@ if (isset($_GET['error'])) {
                     <div class="login-alert-error">
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                         <span><?php echo htmlspecialchars($error_msg, ENT_QUOTES, 'UTF-8'); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($success_msg)): ?>
+                    <div class="login-alert-error" style="background:#ECFDF5; border-color:#A7F3D0; color:#065F46;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span><?php echo htmlspecialchars($success_msg, ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
                 <?php endif; ?>
 

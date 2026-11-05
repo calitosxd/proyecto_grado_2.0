@@ -6,17 +6,11 @@
 require_once('LOGICA/L_Funciones.php');
 require_once('LOGICA/L_Analisis_Historico.php');
 
-$sesion = Funcion_Gestionar_Sesion();
+$sesion = Funcion_Verificar_Autenticacion();
 $rol = $sesion['rol'];
 $permiso = $sesion['permiso'];
 
 $estado_invernadero = Funcion_Obtener_Ultimo_Estado_Invernadero();
-
-// Redireccionar si no hay sesion iniciada
-if ($rol === null) {
-    header("Location: index.php");
-    exit;
-}
 
 require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
 error_reporting(E_ERROR | E_PARSE);

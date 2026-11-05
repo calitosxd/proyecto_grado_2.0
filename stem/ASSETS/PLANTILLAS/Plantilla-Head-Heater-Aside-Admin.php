@@ -12,27 +12,21 @@
 <div id="Body-css">
     <?php
     if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+        if (function_exists('Funcion_Gestionar_Sesion')) {
+            Funcion_Gestionar_Sesion();
+        } else {
+            session_start();
+        }
     }
     
-    // Sincronizar roles desde POST o SESION
-    if (isset($_POST['rol'])) {
-        $rol = $_POST['rol'];
-        $_SESSION['rol'] = $_POST['rol'];
-    } elseif (isset($_SESSION['rol'])) {
-        $rol = $_SESSION['rol'];
-    } else {
-        $rol = null;
+    // Barrera de defensa en profundidad contra acceso no autenticado
+    if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || empty($_SESSION['usuario'])) {
+        header("Location: index.php?error=acceso_denegado");
+        exit;
     }
 
-    if (isset($_POST['permiso'])) {
-        $permiso = $_POST['permiso'];
-        $_SESSION['permiso'] = $_POST['permiso'];
-    } elseif (isset($_SESSION['permiso'])) {
-        $permiso = $_SESSION['permiso'];
-    } else {
-        $permiso = null;
-    }
+    $rol = isset($_SESSION['rol']) ? (int)$_SESSION['rol'] : null;
+    $permiso = isset($_SESSION['permiso']) ? $_SESSION['permiso'] : null;
 
     $current_page = basename($_SERVER['PHP_SELF']);
     
@@ -285,7 +279,7 @@
 
                 <!-- Boton Cerrar Sesion -->
                 <li class="nav-logout-li">
-                    <button class="btn btn-logout" onclick="location.href='index.php'">
+                    <button class="btn btn-logout" onclick="location.href='LOGICA/L_Cerrar_Sesion.php'">
                         <span class="nav-icon">
                             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         </span>

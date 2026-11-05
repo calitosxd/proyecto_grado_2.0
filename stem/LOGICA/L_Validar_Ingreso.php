@@ -1,13 +1,14 @@
 <?php
 /*
- * L_Validar_Ingreso.php - Autenticacion de Usuarios y Control de Sesion
+ * L_Validar_Ingreso.php - Autenticacion Segura de Usuarios y Control de Sesion
  * Semillero STEM - COTECNOVA
+ * Proyecto de Grado: Monitoreo Microambiental y Riego Inteligente
  */
-include('L_Funciones.php');
+require_once('L_Funciones.php');
 error_reporting(E_ERROR | E_PARSE);
 
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    Funcion_Gestionar_Sesion();
 }
 
 $user = isset($_POST['user']) ? trim($_POST['user']) : '';
@@ -22,7 +23,7 @@ $pass2 = Funcion_Contrasena_encriptar($pass);
 $conexion = Funcion_Conectar_Base_Datos();
 
 if (!$conexion) {
-    die("Error en la conexion a la base de datos.");
+    die("Error en la conexión a la base de datos.");
 }
 
 try {
@@ -33,37 +34,37 @@ try {
     $query->execute();
 
     if ($query->rowCount() <= 0) {
+        // Registrar intento fallido en bitácora de auditoría
+        Funcion_Registrar_Auditoria('LOGIN_FALLIDO', 'AUTENTICACION', "Credenciales incorrectas para documento: $user");
         header("Location: ../index.php?error=1");
         exit;
     } else {
         $datos = $query->fetch(PDO::FETCH_ASSOC);
 
         if ($datos['estado_usuario'] == 1) {
-            $rol = $datos['id_pk_rol_fk'];
+            $rol = (int)$datos['id_pk_rol_fk'];
             $permiso = $datos['permiso_usuario_1'];
 
-            // Guardar en sesion nativa de PHP
+            // 1. Regenerar ID de sesión para prevenir Session Fixation
+            session_regenerate_id(true);
+
+            // 2. Establecer variables seguras en sesión nativa
+            $_SESSION['autenticado'] = true;
+            $_SESSION['id_usuario'] = $datos['id_pk_usuario'];
             $_SESSION['usuario'] = $user;
             $_SESSION['rol'] = $rol;
             $_SESSION['permiso'] = $permiso;
             $_SESSION['nombre_usuario'] = $datos['nombre_usuario'] . ' ' . $datos['apellido_usuario'];
+            $_SESSION['ultimo_acceso'] = time();
 
-            // Enviar tambien formulario POST para compatibilidad con el flujo existente
-            echo "<!DOCTYPE html>
-            <html lang='es'>
-            <head><meta charset='UTF-8'><title>Autenticando...</title></head>
-            <body>
-            <form id='redirectForm' method='POST' action='../I_Bienvenida.php'>
-                <input type='hidden' name='rol' value='" . htmlspecialchars($rol, ENT_QUOTES, 'UTF-8') . "'>
-                <input type='hidden' name='permiso' value='" . htmlspecialchars($permiso, ENT_QUOTES, 'UTF-8') . "'>
-            </form>
-            <script type='text/javascript'>
-                document.getElementById('redirectForm').submit();
-            </script>
-            </body>
-            </html>";
+            // 3. Registrar auditoría de acceso exitoso
+            Funcion_Registrar_Auditoria('LOGIN_EXITOSO', 'AUTENTICACION', "Inicio de sesión exitoso como rol: $rol");
+
+            // 4. Redirección directa y segura
+            header("Location: ../I_Bienvenida.php");
             exit;
         } elseif ($datos['estado_usuario'] == 0) {
+            Funcion_Registrar_Auditoria('LOGIN_BLOQUEADO_INACTIVO', 'AUTENTICACION', "Intento con cuenta inactiva: $user");
             header("Location: ../index.php?error=2");
             exit;
         }

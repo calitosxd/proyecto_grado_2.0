@@ -33,23 +33,73 @@ function Funcion_Gestionar_Sesion() {
         session_start();
     }
     
-    // Si llegan datos por POST, actualizar sesion
-    if (isset($_POST['rol'])) {
-        $_SESSION['rol'] = $_POST['rol'];
-    }
-    if (isset($_POST['permiso'])) {
-        $_SESSION['permiso'] = $_POST['permiso'];
-    }
-    if (isset($_POST['usuario'])) {
-        $_SESSION['usuario'] = $_POST['usuario'];
-    }
-
-    $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : (isset($_POST['rol']) ? $_POST['rol'] : null);
-    $permiso = isset($_SESSION['permiso']) ? $_SESSION['permiso'] : (isset($_POST['permiso']) ? $_POST['permiso'] : null);
+    $rol = isset($_SESSION['rol']) ? $_SESSION['rol'] : null;
+    $permiso = isset($_SESSION['permiso']) ? $_SESSION['permiso'] : null;
 
     return array(
         'rol' => $rol,
         'permiso' => $permiso
+    );
+}
+
+/**
+ * Control estricto de autenticacion y RBAC (Role-Based Access Control).
+ * Impide acceso no autenticado a cualquier vista del sistema.
+ * 
+ * @param array $roles_permitidos Lista opcional de roles admitidos (ej: [0, 1] o [0, 1, 2])
+ * @return array Datos de la sesion validada
+ */
+function Funcion_Verificar_Autenticacion($roles_permitidos = array()) {
+    if (session_status() === PHP_SESSION_NONE) {
+        Funcion_Gestionar_Sesion();
+    }
+
+    // 1. Barrera contra acceso no autenticado
+    if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true || empty($_SESSION['usuario'])) {
+        $ruta_intento = basename($_SERVER['PHP_SELF']);
+        Funcion_Registrar_Auditoria('ACCESO_DENEGADO_SIN_LOGIN', 'SEGURIDAD', "Intento directo a: $ruta_intento");
+        header("Location: index.php?error=acceso_denegado");
+        exit;
+    }
+
+    // 2. Control de Inactividad (Timeout de 30 minutos = 1800s)
+    $timeout = 1800;
+    if (isset($_SESSION['ultimo_acceso']) && (time() - $_SESSION['ultimo_acceso'] > $timeout)) {
+        Funcion_Registrar_Auditoria('SESION_EXPIRADA', 'SEGURIDAD', 'Sesión expirada por inactividad');
+        $_SESSION = array();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        }
+        session_destroy();
+        header("Location: index.php?error=sesion_expirada");
+        exit;
+    }
+    $_SESSION['ultimo_acceso'] = time();
+
+    // 3. Control de Roles (RBAC)
+    $rol = isset($_SESSION['rol']) ? (int)$_SESSION['rol'] : 4;
+    if (!empty($roles_permitidos)) {
+        $autorizado = false;
+        foreach ($roles_permitidos as $r) {
+            if ((int)$r === $rol) {
+                $autorizado = true;
+                break;
+            }
+        }
+        if (!$autorizado) {
+            $ruta_intento = basename($_SERVER['PHP_SELF']);
+            Funcion_Registrar_Auditoria('ACCESO_NO_AUTORIZADO_ROL', 'SEGURIDAD', "Rol $rol intentó acceder a $ruta_intento");
+            header("Location: I_Bienvenida.php?error=rol_no_autorizado");
+            exit;
+        }
+    }
+
+    return array(
+        'rol' => $_SESSION['rol'],
+        'permiso' => isset($_SESSION['permiso']) ? $_SESSION['permiso'] : null,
+        'usuario' => $_SESSION['usuario'],
+        'nombre_usuario' => isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : $_SESSION['usuario']
     );
 }
 

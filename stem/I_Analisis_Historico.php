@@ -4,14 +4,10 @@
 // Invernadero COTECNOVA — Semillero COTECTRONIX
 // ==============================================================================
 
-// Manejo de sesión y roles (Compatible con el sistema transaccional existente)
-if (isset($_POST['rol']) && isset($_POST['permiso'])) {
-    $rol = $_POST['rol'];
-    $permiso = $_POST['permiso'];
-} else {
-    $rol = isset($_GET['rol']) ? $_GET['rol'] : 0;
-    $permiso = isset($_GET['permiso']) ? $_GET['permiso'] : 19;
-}
+require_once('LOGICA/L_Funciones.php');
+$sesion = Funcion_Verificar_Autenticacion();
+$rol = $sesion['rol'];
+$permiso = $sesion['permiso'];
 
 include('LOGICA/L_Analisis_Historico.php');
 error_reporting(E_ERROR | E_PARSE);
