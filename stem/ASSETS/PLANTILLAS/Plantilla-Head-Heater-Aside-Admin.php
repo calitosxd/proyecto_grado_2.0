@@ -268,6 +268,23 @@
                     </form>
                 </li>
 
+                <?php if ($rol == 0 || $rol == 1 || $rol == 2): ?>
+                    <!-- Diagnostico y Salud del Sistema -->
+                    <?php $isActive = ($current_page == 'I_Diagnostico.php'); ?>
+                    <li>
+                        <button class="btn nav-btn <?php echo $isActive ? 'active-nav' : ''; ?>" onclick="document.getElementById('formNavDiagnostico').submit();">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            </span>
+                            <span class="nav-text">Salud & Diagnóstico</span>
+                        </button>
+                        <form id="formNavDiagnostico" method="POST" action="I_Diagnostico.php">
+                            <input type="hidden" name="rol" value="<?php echo htmlspecialchars($rol, ENT_QUOTES, 'UTF-8'); ?>">
+                            <input type="hidden" name="permiso" value="<?php echo htmlspecialchars($permiso, ENT_QUOTES, 'UTF-8'); ?>">
+                        </form>
+                    </li>
+                <?php endif; ?>
+
                 <!-- Boton Cerrar Sesion -->
                 <li class="nav-logout-li">
                     <button class="btn btn-logout" onclick="location.href='LOGICA/L_Cerrar_Sesion.php'">

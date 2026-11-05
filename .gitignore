@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+# Variables de entorno y configuracion local (Credenciales sensibles)
+.env
 *.env
+.env.local
 venv/
 .venv/
 

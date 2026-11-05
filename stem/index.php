@@ -16,6 +16,8 @@ if (isset($_GET['error'])) {
         $error_msg = "Su sesión ha expirado por inactividad. Ingrese nuevamente.";
     } elseif ($_GET['error'] == 'rol_no_autorizado') {
         $error_msg = "Su rol no tiene privilegios para acceder al módulo solicitado.";
+    } elseif ($_GET['error'] == 'db_error') {
+        $error_msg = "No se pudo conectar a la base de datos MySQL en XAMPP. Asegúrese de que el servicio MySQL esté iniciado en el panel de control.";
     }
 }
 

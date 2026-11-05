@@ -23,7 +23,8 @@ $pass2 = Funcion_Contrasena_encriptar($pass);
 $conexion = Funcion_Conectar_Base_Datos();
 
 if (!$conexion) {
-    die("Error en la conexión a la base de datos.");
+    header("Location: ../index.php?error=db_error");
+    exit;
 }
 
 try {

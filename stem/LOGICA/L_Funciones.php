@@ -115,6 +115,58 @@ function filtrado($datos) {
 }
 
 /*============================================================================
+ * GESTOR DE CONFIGURACION Y VARIABLES DE ENTORNO (.ENV)
+ *============================================================================*/
+
+/**
+ * Carga variables de entorno desde un archivo .env si existe.
+ */
+function Funcion_Cargar_Env() {
+    static $cargado = false;
+    if ($cargado) return;
+
+    $posibles_rutas = [
+        dirname(__DIR__, 2) . '/.env', // Raiz del proyecto
+        dirname(__DIR__) . '/.env',    // Carpeta stem
+        __DIR__ . '/.env'
+    ];
+
+    foreach ($posibles_rutas as $ruta) {
+        if (file_exists($ruta) && is_readable($ruta)) {
+            $lineas = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lineas as $linea) {
+                $linea = trim($linea);
+                if (empty($linea) || strpos($linea, '#') === 0) continue;
+                if (strpos($linea, '=') !== false) {
+                    list($clave, $valor) = explode('=', $linea, 2);
+                    $clave = trim($clave);
+                    $valor = trim($valor);
+                    $valor = trim($valor, "\"'");
+                    if (!array_key_exists($clave, $_SERVER) && !array_key_exists($clave, $_ENV)) {
+                        putenv("$clave=$valor");
+                        $_ENV[$clave] = $valor;
+                        $_SERVER[$clave] = $valor;
+                    }
+                }
+            }
+            break;
+        }
+    }
+    $cargado = true;
+}
+
+/**
+ * Obtiene un valor de configuracion de entorno con valor de respaldo seguro.
+ */
+function Funcion_Obtener_Config($clave, $defecto = '') {
+    Funcion_Cargar_Env();
+    if (isset($_ENV[$clave])) return $_ENV[$clave];
+    if (isset($_SERVER[$clave])) return $_SERVER[$clave];
+    $env = getenv($clave);
+    return ($env !== false) ? $env : $defecto;
+}
+
+/*============================================================================
  * CONEXIONES A BASE DE DATOS
  *============================================================================*/
 
@@ -122,14 +174,18 @@ function filtrado($datos) {
  * Conexion MySQLi para consultas rapidas y compatibilidad ESP32 / IA.
  */
 function Funcion_Conectar_Base_Datos_ESP32() {
-    $conexion = mysqli_connect("127.0.0.1", "victorhugohp", "@1982vhHP2026@", "Base_Datos_Proyecto");
+    $host = Funcion_Obtener_Config('DB_HOST', '127.0.0.1');
+    $port = (int)Funcion_Obtener_Config('DB_PORT', 3306);
+    $name = Funcion_Obtener_Config('DB_NAME', 'Base_Datos_Proyecto');
+    $user = Funcion_Obtener_Config('DB_USER', 'victorhugohp');
+    $pass = Funcion_Obtener_Config('DB_PASS', '@1982vhHP2026@');
 
+    $conexion = @mysqli_connect($host, $user, $pass, $name, $port);
     if (!$conexion) {
         error_log("Error en conexion MySQLi: " . mysqli_connect_error());
-        die("Error en la conexion a la base de datos.");
+        return null;
     }
-
-    mysqli_set_charset($conexion, "utf8");
+    mysqli_set_charset($conexion, "utf8mb4");
     return $conexion;
 }
 
@@ -137,12 +193,20 @@ function Funcion_Conectar_Base_Datos_ESP32() {
  * Conexion PDO para operaciones seguras con transacciones y sentencias preparadas.
  */
 function Funcion_Conectar_Base_Datos() {
-    if (!defined('BD_USER')) define('BD_USER', 'victorhugohp');
-    if (!defined('BD_CLAVE')) define('BD_CLAVE', '@1982vhHP2026@');
+    $host = Funcion_Obtener_Config('DB_HOST', '127.0.0.1');
+    $port = Funcion_Obtener_Config('DB_PORT', '3306');
+    $name = Funcion_Obtener_Config('DB_NAME', 'Base_Datos_Proyecto');
+    $user = Funcion_Obtener_Config('DB_USER', 'victorhugohp');
+    $pass = Funcion_Obtener_Config('DB_PASS', '@1982vhHP2026@');
+    $charset = Funcion_Obtener_Config('DB_CHARSET', 'utf8mb4');
 
     try {
-        $conexion = new PDO('mysql:host=127.0.0.1;dbname=Base_Datos_Proyecto;charset=utf8', BD_USER, BD_CLAVE);
-        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $dsn = "mysql:host=$host;port=$port;dbname=$name;charset=$charset";
+        $conexion = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]);
         return $conexion;
     } catch (PDOException $e) {
         error_log("Error PDO: " . $e->getMessage());
