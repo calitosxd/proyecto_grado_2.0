@@ -37,3 +37,4 @@ session_destroy();
 header("Location: ../index.php?msg=sesion_cerrada");
 exit;
 ?>
+

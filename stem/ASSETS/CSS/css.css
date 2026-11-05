@@ -153,17 +153,6 @@ header, HEADER {
   transform: translateY(-1px);
 }
 
-.btn-sound.sound-muted {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #FCA5A5;
-}
-
-.btn-action-label {
-  display: inline-block;
-  font-size: 0.78rem;
-}
-
 /* Envoltorio del Centro de Notificaciones */
 .notification-wrapper {
   position: relative;

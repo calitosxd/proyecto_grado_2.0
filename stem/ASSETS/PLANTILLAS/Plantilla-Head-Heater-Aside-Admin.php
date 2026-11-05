@@ -70,15 +70,6 @@
                 </div>
                 
                 <div class="header-session-info">
-                    <!-- Boton de Control de Sonido -->
-                    <button type="button" class="btn-header-action btn-sound" id="btnSoundToggle" onclick="CotecnovaAudio.toggleSound()" aria-label="Alternar Efectos de Sonido" title="Alternar Sonido">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                        </svg>
-                        <span class="btn-action-label">Audio ON</span>
-                    </button>
-
                     <!-- Centro de Notificaciones -->
                     <div class="notification-wrapper">
                         <button type="button" class="btn-header-action btn-notification" id="btnNotificationToggle" onclick="CotecnovaNotify.toggleDropdown()" aria-label="Centro de Alertas">
