@@ -128,6 +128,350 @@ header, HEADER {
   gap: 12px;
 }
 
+/* Botones de Acción en el Header (Sonido & Notificaciones) */
+.btn-header-action {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  border-radius: 20px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.btn-header-action:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.btn-sound.sound-muted {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #FCA5A5;
+}
+
+.btn-action-label {
+  display: inline-block;
+  font-size: 0.78rem;
+}
+
+/* Envoltorio del Centro de Notificaciones */
+.notification-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-notification {
+  padding: 7px 11px;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 50%;
+  text-align: center;
+  padding: 0 4px;
+  border: 2px solid #004D25;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  animation: pulse-badge 2s infinite ease-in-out;
+}
+
+@keyframes pulse-badge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); box-shadow: 0 0 10px #EF4444; }
+  100% { transform: scale(1); }
+}
+
+/* Panel Desplegable de Notificaciones */
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 360px;
+  max-width: 90vw;
+  background: #FFFFFF;
+  color: #1E293B;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25), 0 3px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+  z-index: 10000;
+  overflow: hidden;
+  animation: fadeInDropdown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.notif-dropdown.show-notif-dropdown {
+  display: block;
+}
+
+@keyframes fadeInDropdown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notif-header {
+  background: #F8FAFC;
+  padding: 12px 16px;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notif-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notif-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0F172A;
+}
+
+.notif-tag {
+  background: #E0E7FF;
+  color: #3730A3;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.notif-mark-read {
+  background: none;
+  border: none;
+  color: #00602F;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.notif-mark-read:hover {
+  background: #ECFDF5;
+  text-decoration: underline;
+}
+
+.notif-list {
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F1F5F9;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.notif-item:hover {
+  background: #F8FAFC;
+}
+
+.notif-item.notif-unread {
+  background: #F0FDF4;
+}
+
+.notif-item.notif-unread::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #00602F;
+}
+
+.notif-item.notif-danger.notif-unread::before {
+  background: #EF4444;
+}
+
+.notif-item.notif-warning.notif-unread::before {
+  background: #F59E0B;
+}
+
+.notif-item-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.notif-item-content {
+  flex: 1;
+}
+
+.notif-item-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 2px;
+}
+
+.notif-item-desc {
+  font-size: 0.77rem;
+  color: #475569;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.notif-item-time {
+  font-size: 0.68rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.notif-footer {
+  padding: 10px 16px;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  text-align: center;
+}
+
+.btn-notif-view-all {
+  background: none;
+  border: none;
+  color: #00602F;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-notif-view-all:hover {
+  color: #EE7117;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   SISTEMA DE NOTIFICACIONES FLOTANTES (TOASTS)
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 300px;
+  max-width: 420px;
+  background: #FFFFFF;
+  color: #1E293B;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-left: 5px solid #00602F;
+  animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
+}
+
+@keyframes slideInToast {
+  from { transform: translateX(110%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-fade-out {
+  transform: translateX(110%);
+  opacity: 0;
+}
+
+.toast-icon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.toast-body {
+  flex: 1;
+}
+
+.toast-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0F172A;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+}
+
+.toast-close:hover {
+  color: #0F172A;
+}
+
+.toast-danger {
+  border-left-color: #EF4444;
+}
+.toast-danger .toast-icon {
+  color: #EF4444;
+}
+
+.toast-warning {
+  border-left-color: #F59E0B;
+}
+.toast-warning .toast-icon {
+  color: #F59E0B;
+}
+
+.toast-success {
+  border-left-color: #10B981;
+}
+.toast-success .toast-icon {
+  color: #10B981;
+}
+
+.toast-info {
+  border-left-color: #3B82F6;
+}
+.toast-info .toast-icon {
+  color: #3B82F6;
+}
+
 .session-chip {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.25);

@@ -76,6 +76,68 @@
                 </div>
                 
                 <div class="header-session-info">
+                    <!-- Boton de Control de Sonido -->
+                    <button type="button" class="btn-header-action btn-sound" id="btnSoundToggle" onclick="CotecnovaAudio.toggleSound()" aria-label="Alternar Efectos de Sonido" title="Alternar Sonido">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        <span class="btn-action-label">Audio ON</span>
+                    </button>
+
+                    <!-- Centro de Notificaciones -->
+                    <div class="notification-wrapper">
+                        <button type="button" class="btn-header-action btn-notification" id="btnNotificationToggle" onclick="CotecnovaNotify.toggleDropdown()" aria-label="Centro de Alertas">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span class="notif-badge" id="notifBadge">3</span>
+                        </button>
+
+                        <!-- Panel Desplegable de Notificaciones -->
+                        <div class="notif-dropdown" id="notificationDropdown">
+                            <div class="notif-header">
+                                <div class="notif-title-wrap">
+                                    <span class="notif-title">Centro de Alertas</span>
+                                    <span class="notif-tag">FAO 56 &bull; TinyML</span>
+                                </div>
+                                <button type="button" class="notif-mark-read" onclick="CotecnovaNotify.markAllAsRead()">Marcar leídas</button>
+                            </div>
+                            <div class="notif-list">
+                                <div class="notif-item notif-unread notif-danger">
+                                    <div class="notif-item-icon">⚠️</div>
+                                    <div class="notif-item-content">
+                                        <div class="notif-item-title">Alerta Hídrica: Surco 3 (RDC 50%)</div>
+                                        <div class="notif-item-desc">Humedad de suelo al 36.2%. Cerca del umbral de alerta FAO 56 (35%).</div>
+                                        <span class="notif-item-time">Hace 15 min</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item notif-unread notif-success">
+                                    <div class="notif-item-icon">⚡</div>
+                                    <div class="notif-item-content">
+                                        <div class="notif-item-title">Inferencia TinyML Ejecutada</div>
+                                        <div class="notif-item-desc">Electroválvula 3 operada satisfactoriamente para dosificación de riego en bloque.</div>
+                                        <span class="notif-item-time">Hace 1 hora</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item notif-unread notif-info">
+                                    <div class="notif-item-icon">🌡️</div>
+                                    <div class="notif-item-content">
+                                        <div class="notif-item-title">Microclima Estable</div>
+                                        <div class="notif-item-desc">Temperatura: 26.5°C / Humedad: 71%. Condiciones fotosintéticas óptimas.</div>
+                                        <span class="notif-item-time">Hace 2 horas</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notif-footer">
+                                <button type="button" class="btn-notif-view-all" onclick="document.getElementById('formNavAnalisis').submit();">
+                                    Ver Análisis Histórico &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="session-chip">
                         <span class="session-dot"></span>
                         <svg class="svg-inline-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -203,6 +265,9 @@
             </ul>
         </nav>
     </aside>
+
+    <!-- Contenedor Global para Notificaciones Flotantes (Toasts) -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script>
     function toggleMenuDrawer(forzar) {
