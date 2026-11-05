@@ -790,10 +790,7 @@ require('ASSETS/PLANTILLAS/Plantilla-Head-Heater-Aside-Admin.php');
     margin-bottom: 1.8rem;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     overflow-x: auto;
-    position: sticky;
-    top: 75px;
-    z-index: 90;
-    backdrop-filter: blur(8px);
+    position: static;
     scrollbar-width: thin;
 }
 .tab-btn {
